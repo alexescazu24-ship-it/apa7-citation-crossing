@@ -1,4 +1,24 @@
 <!DOCTYPE html>
+<!--
+  BiblioCrossing — verificador abierto de coherencia entre las citas de un texto
+  y su lista de referencias, según la norma APA 7.
+  Copyright (C) 2026  Alexander Chinchilla Serrano
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published
+  by the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 <html lang="es" data-theme="oscuro">
 <head>
   <meta charset="UTF-8">
@@ -27,12 +47,11 @@
     .orb-3{width:150px;height:150px;background:#a78bfa;top:20px;left:40%;animation-delay:-6s}
     @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-15px) scale(1.05)}66%{transform:translate(-10px,10px) scale(.95)}}
     .hdr-content{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px}
-    .logo-line{display:flex;align-items:center;gap:16px}50%{filter:drop-shadow(0 0 24px rgba(167,139,250,.9))}}
-    [data-theme="sobrio"]
-    [data-theme="sobrio"]
-    [data-theme="sobrio"]
+    .logo-line{display:flex;align-items:center;gap:16px}
     .logo-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:6px}
     [data-theme="sobrio"] .logo-sub{color:var(--texto-dim)}
+    .logo-ver{font-family:var(--font-mono,monospace);font-size:11px;font-weight:600;letter-spacing:.5px;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 8px;white-space:nowrap}
+    [data-theme="sobrio"] .logo-ver{color:var(--texto-dim);border-color:var(--border)}
     .logo-placa{background:transparent;border-radius:0;padding:0}
     [data-theme="claro"] .logo-placa{background:oklch(0.20 0.03 265);border-radius:15px;padding:8px 12px}
     [data-theme="sobrio"] .logo-placa{background:oklch(0.19 0.03 255);border-radius:11px;padding:8px 12px}
@@ -44,7 +63,7 @@
     /* CONTROLS */
     .ctrl-group{display:flex;flex-direction:column;align-items:center;gap:5px}
     .ctrl-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.35);font-family:var(--font-mono,'monospace')}
-    [data-theme="sobrio"] .ctrl-label,[data-theme="claro"] .ctrl-label{color:rgba(255,255,255,.55)}
+    [data-theme="claro"] .ctrl-label{color:rgba(255,255,255,.55)}
     [data-theme="sobrio"] .ctrl-label{color:var(--texto-dim)!important}
     .sw-track{display:flex;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:3px;gap:2px}
     [data-theme="sobrio"] .sw-track{background:transparent;border-color:var(--border)}
@@ -141,6 +160,10 @@
     .b-fant{color:var(--amarillo);border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.08)}
     .b-soft{color:#f97316;border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.08)}
     .b-dup{color:#a855f7;border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.08)}
+    .b-coma{color:#0ea5e9;border-color:rgba(14,165,233,.3);background:rgba(14,165,233,.08)}
+    .b-pers{color:#64748b;border-color:rgba(100,116,139,.35);background:rgba(100,116,139,.10)}
+    .b-norm{color:#0d9488;border-color:rgba(13,148,136,.3);background:rgba(13,148,136,.08)}
+    .b-ambig{color:#db2777;border-color:rgba(219,39,119,.3);background:rgba(219,39,119,.08)}
     .type-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:6px;font-size:10.5px;font-weight:600;letter-spacing:.3px}
     .t-par{background:rgba(56,189,248,.1);color:var(--accent2)}
     .t-nar{background:rgba(167,139,250,.1);color:var(--accent3)}
@@ -155,9 +178,6 @@
     .footer-bar{margin-top:32px;padding:18px 22px;border:1px solid var(--border);border-radius:var(--radio);background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
     .footer-info{font-size:12px;color:var(--texto-dim);line-height:1.65}
     .footer-info strong{color:var(--texto)}
-    .cc-link{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--texto-dim);text-decoration:none}
-    .cc-link img{height:20px;opacity:.7;transition:opacity .15s}
-    .cc-link:hover img{opacity:1}
 
     /* ABOUT MODAL */
     .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
@@ -175,6 +195,72 @@
     .modal-body strong{color:var(--texto)}
     .modal-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
     .modal-meta{font-size:12px;color:var(--texto-dim);display:flex;flex-direction:column;gap:6px}
+
+    /* COPIAR CLAVE */
+    .btn-copy{position:relative;background:none;border:none;padding:2px;margin-left:6px;border-radius:4px;cursor:pointer;color:var(--texto-dim);opacity:.45;transition:opacity .15s,color .15s;vertical-align:middle;line-height:0}
+    tbody tr:hover .btn-copy{opacity:.85}
+    /* Globo propio: aparece al instante, también con el teclado, y no mueve la maquetación */
+    .btn-copy::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);background:var(--surface2);color:var(--texto);border:1px solid var(--border);border-radius:6px;padding:5px 9px;font-family:var(--font-body,sans-serif);font-size:11px;font-weight:500;line-height:1.35;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s;z-index:20;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+    .btn-copy:hover::after,.btn-copy:focus-visible::after{opacity:1}
+    /* El aviso de fallo es una frase larga: ahí sí se deja envolver */
+    .btn-copy.failed::after{white-space:normal;width:215px;text-align:left}
+    .btn-copy:hover{opacity:1;color:var(--accent2)}
+    .btn-copy:focus-visible{opacity:1;outline:2px solid var(--accent);outline-offset:2px}
+    .btn-copy svg{width:13px;height:13px;display:block}
+    .btn-copy .ico-ok{display:none}
+    .btn-copy.copied{opacity:1;color:var(--verde)}
+    .btn-copy.failed{opacity:1;color:var(--rojo)}
+    .btn-copy.copied .ico-copy{display:none}
+    .btn-copy.copied .ico-ok{display:block}
+
+    /* MANUAL */
+    #manual-view{display:none}
+    #manual-view.visible{display:block}
+    .msec{max-width:860px;margin:0 auto;padding:48px 24px 80px}
+    .mtoc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radio);padding:24px 28px;margin-bottom:40px}
+    .mtoc h3{font-size:14px;font-weight:700;color:var(--texto);margin-bottom:12px;font-family:var(--font-display,sans-serif)}
+    .mtoc ol{padding-left:20px}
+    .mtoc li{margin-bottom:5px}
+    .mtoc a{color:var(--accent3);text-decoration:none;font-size:13.5px}
+    .mtoc a:hover{text-decoration:underline}
+    .mblock{margin-bottom:48px;scroll-margin-top:20px}
+    .mnum{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--accent3);margin-bottom:4px;font-family:var(--font-mono,monospace)}
+    .mblock h2{font-size:20px;font-weight:700;color:var(--texto);margin-bottom:12px;border-bottom:2px solid var(--border);padding-bottom:8px;font-family:var(--font-display,sans-serif)}
+    .mblock p,.mblock li{font-size:14px;color:var(--texto);line-height:1.75;margin-bottom:8px}
+    .mblock ul,.mblock ol{padding-left:20px;margin-bottom:10px}
+    .mcallout{display:flex;gap:12px;padding:12px 16px;border-radius:10px;margin:14px 0;font-size:13px;line-height:1.6;color:var(--texto)}
+    .mcallout.tip{background:rgba(56,189,248,.08);border-left:4px solid var(--accent2)}
+    .mcallout.warn{background:rgba(251,191,36,.08);border-left:4px solid var(--amarillo)}
+    .mcallout.ok{background:rgba(52,211,153,.08);border-left:4px solid var(--verde)}
+    .mstep{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+    .mstep:last-child{border-bottom:none}
+    .mstep-n{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+    .mstep h3{font-size:14px;font-weight:600;color:var(--texto);margin-bottom:3px}
+    .mstep p{font-size:13px;color:var(--texto-dim);margin:0;line-height:1.6}
+    .mbadge-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+    .mbadge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12.5px;font-weight:600}
+    .mb-e{background:rgba(248,113,113,.12);color:var(--rojo);border:1px solid rgba(248,113,113,.3)}
+    .mb-w{background:rgba(251,191,36,.12);color:var(--amarillo);border:1px solid rgba(251,191,36,.3)}
+    .mb-n{background:rgba(148,163,184,.12);color:var(--texto-dim);border:1px solid rgba(148,163,184,.25)}
+    .mthemes{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+    .mtheme{flex:1;min-width:190px;border-radius:12px;padding:18px;text-align:center}
+    .mtheme h4{font-size:14px;font-weight:700;margin:8px 0 4px}
+    .mtheme p{font-size:12px;margin:0;opacity:.75;line-height:1.5}
+    .mt-d{background:#0d1f3c;color:#fff}
+    .mt-l{background:linear-gradient(170deg,#f0f1fb,#f5f8ff);color:#1a1d2e;border:1px solid #e2e5f0}
+    .mt-s{background:#f7f5f0;color:#2c2820;border:1px solid #e5e0d5}
+    .mtable{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0}
+    .mtable th{border-bottom:2px solid var(--border);padding:9px 12px;text-align:left;color:var(--texto-dim);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    .mtable td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--texto)}
+    .mbtn-back{background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body,inherit)}
+
+    /* LICENCIAS */
+    .lic-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .cc-badge{display:flex;align-items:center;gap:7px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);text-decoration:none;transition:border-color .15s}
+    .cc-badge:hover{border-color:var(--accent3)}
+    .cc-badge img{height:22px;opacity:.85}
+    .cc-text{font-size:11px;color:var(--texto-dim);line-height:1.4}
+    .cc-text strong{color:var(--texto);display:block}
 
     /* EMPTY */
     .empty-state{text-align:center;padding:40px 24px;color:var(--texto-dim)}
@@ -198,6 +284,8 @@
 </head>
 <body>
 
+<div id="app-view">
+
 <header>
   <div class="hdr-grad"></div>
   <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
@@ -205,8 +293,9 @@
     <div class="logo-area">
       <div class="logo-line">
         <div class="logo-placa">
-          <img id="logo-img" src="logo.png" alt="BiblioCrossing" style="height:132px;width:auto;display:block;">
+          <img src="logo.png" alt="BiblioCrossing" style="height:132px;width:auto;display:block;">
         </div>
+        <span class="logo-ver" id="app-version"></span>
         <div class="logo-sub" data-i18n="header.sub">Verificador de coherencia entre citas y referencias · APA 7</div>
       </div>
     </div>
@@ -229,6 +318,7 @@
           </div>
         </div>
         <div class="ctrl-divider"></div>
+        <button class="btn-about" id="btn-manual" data-i18n="btn.manual">📖 Manual</button>
         <button class="btn-about" id="btn-about" data-i18n="btn.about">Acerca de</button>
       </div>
     </div>
@@ -289,7 +379,7 @@
         <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
           <div class="card-title" style="margin-bottom:0"><span>📋</span><span data-i18n="card.report">Detalle de inconsistencias</span></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-word" id="btn-word" data-i18n-full="btn.word"><span>📝</span> <span data-i18n="btn.word">Descargar Word</span></button>
+            <button class="btn-word" id="btn-word"><span>📝</span> <span data-i18n="btn.word">Descargar Word</span></button>
             <button class="btn-excel" id="btn-excel"><span>📊</span> <span data-i18n="btn.excel">Descargar Excel</span></button>
           </div>
         </div>
@@ -307,14 +397,238 @@
         <strong>BiblioCrossing</strong> · <span data-i18n="footer.by">Desarrollado por</span> Alexander Chinchilla Serrano / email: fchinchillas@uned.ac.cr<br>
         <span data-i18n="footer.inst">Vicerrectoría de Investigación · Universidad Estatal a Distancia (UNED)</span> · San José, Costa Rica · 2026
       </div>
-      <a class="cc-link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">
-        <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" alt="CC BY-NC-SA 4.0">
-        <span>CC BY-NC-SA 4.0</span>
-      </a>
+      <div class="lic-row">
+        <a class="cc-badge" href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener">
+          <span class="cc-text"><strong data-i18n="lic.code">Código:</strong> AGPL-3.0-or-later</span>
+        </a>
+        <a class="cc-badge" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
+          <img src="https://i.creativecommons.org/l/by/4.0/88x31.png" alt="CC BY 4.0">
+          <span class="cc-text"><strong data-i18n="lic.content">Contenido:</strong> CC BY 4.0</span>
+        </a>
+        <a class="cc-badge" href="https://github.com/alexescazu24-ship-it/apa7-citation-crossing" target="_blank" rel="noopener">
+          <span class="cc-text" data-i18n="lic.source">💻 Código fuente</span>
+        </a>
+      </div>
     </div>
 
   </div>
 </main>
+
+</div><!-- /#app-view -->
+<div id="manual-view">
+  <div class="msec">
+
+    <nav class="mtoc">
+      <h3><span data-m-es>Contenido del Manual</span><span data-m-en style="display:none">Manual Contents</span></h3>
+      <ol>
+        <li><a href="#ms1"><span data-m-es>¿Qué es BiblioCrossing?</span><span data-m-en style="display:none">What is BiblioCrossing?</span></a></li>
+        <li><a href="#ms2"><span data-m-es>La interfaz principal</span><span data-m-en style="display:none">The main interface</span></a></li>
+        <li><a href="#ms3"><span data-m-es>Ingresar el documento — 2 formas</span><span data-m-en style="display:none">Loading the document — 2 ways</span></a></li>
+        <li><a href="#ms4"><span data-m-es>Cómo encuentra la sección de referencias</span><span data-m-en style="display:none">How the reference section is found</span></a></li>
+        <li><a href="#ms5"><span data-m-es>Interpretar los resultados</span><span data-m-en style="display:none">Reading the results</span></a></li>
+        <li><a href="#ms6"><span data-m-es>Exportar el reporte</span><span data-m-en style="display:none">Exporting the report</span></a></li>
+        <li><a href="#ms7"><span data-m-es>Estilos visuales</span><span data-m-en style="display:none">Visual styles</span></a></li>
+        <li><a href="#ms8"><span data-m-es>Alcance y límites</span><span data-m-en style="display:none">Scope and limits</span></a></li>
+      </ol>
+    </nav>
+
+    <!-- 01 -->
+    <div class="mblock" id="ms1">
+      <div class="mnum">01</div>
+      <h2><span data-m-es>¿Qué es BiblioCrossing?</span><span data-m-en style="display:none">What is BiblioCrossing?</span></h2>
+      <p><span data-m-es><strong>BiblioCrossing</strong> cruza las citas del texto con la lista de referencias de un manuscrito, siguiendo la norma APA 7.ª edición. Responde a una pregunta concreta: <strong>¿toda cita tiene su referencia, y toda referencia fue citada?</strong></span><span data-m-en style="display:none"><strong>BiblioCrossing</strong> cross-checks a manuscript's in-text citations against its reference list, following APA 7th edition. It answers one concrete question: <strong>does every citation have a reference, and was every reference actually cited?</strong></span></p>
+      <p><span data-m-es>No consulta bases de datos externas ni comprueba que la fuente exista en el mundo real. Revisa la <strong>coherencia interna</strong> del documento. Es una herramienta distinta y complementaria de las que validan la existencia de cada referencia.</span><span data-m-en style="display:none">It does not query external databases or check whether a source exists in the real world. It checks the document's <strong>internal consistency</strong>. It is a different, complementary tool to those that validate whether each reference is real.</span></p>
+      <div class="mcallout tip"><span>📝</span><span data-m-es>Todos los nombres de personas que aparecen en este manual —Pérez, García, Ramírez, Ayala, Sánchez— son <strong>ficticios</strong> y sirven solo para ilustrar cada caso. Los organismos citados como ejemplo (OMS, SINAC, INEC) sí son reales.</span><span data-m-en style="display:none">Every personal name in this manual — Pérez, García, Ramírez, Ayala, Sánchez — is <strong>fictitious</strong> and serves only to illustrate each case. The organisations used as examples (WHO, SINAC, INEC) are real.</span></div>
+      <div class="mcallout ok"><span>✅</span><span data-m-es>Todo el análisis ocurre en su navegador. El manuscrito <strong>no se sube a ningún servidor</strong>. No requiere instalación ni cuenta.</span><span data-m-en style="display:none">All processing happens in your browser. The manuscript is <strong>never uploaded to any server</strong>. No installation or account required.</span></div>
+    </div>
+
+    <!-- 02 -->
+    <div class="mblock" id="ms2">
+      <div class="mnum">02</div>
+      <h2><span data-m-es>La interfaz principal</span><span data-m-en style="display:none">The main interface</span></h2>
+      <p><span data-m-es>La pantalla tiene tres zonas:</span><span data-m-en style="display:none">The screen has three areas:</span></p>
+      <ul>
+        <li><span data-m-es><strong>Encabezado:</strong> logo, versión de la app, idioma (ES/EN), tema visual y los botones Manual y Acerca de.</span><span data-m-en style="display:none"><strong>Header:</strong> logo, app version, language (ES/EN), visual theme, and the Manual and About buttons.</span></li>
+        <li><span data-m-es><strong>Entrada del documento:</strong> dos pestañas — pegar texto o subir un archivo .docx.</span><span data-m-en style="display:none"><strong>Document input:</strong> two tabs — paste text or upload a .docx file.</span></li>
+        <li><span data-m-es><strong>Resultado:</strong> tarjetas de resumen, tabla de detalle y botones de exportación. Aparece solo después de analizar.</span><span data-m-en style="display:none"><strong>Results:</strong> summary cards, a detail table and export buttons. It appears only after you run an analysis.</span></li>
+      </ul>
+      <div class="mcallout tip"><span>💡</span><span data-m-es>El idioma cambia también los reportes exportados a Word y Excel. Elija el idioma <em>antes</em> de exportar.</span><span data-m-en style="display:none">The language switch also changes the exported Word and Excel reports. Pick the language <em>before</em> exporting.</span></div>
+    </div>
+
+    <!-- 03 -->
+    <div class="mblock" id="ms3">
+      <div class="mnum">03</div>
+      <h2><span data-m-es>Ingresar el documento — 2 formas</span><span data-m-en style="display:none">Loading the document — 2 ways</span></h2>
+      <div class="mcallout warn"><span>⚠️</span><span data-m-es>Aquí se necesita el <strong>documento completo</strong>, no solo la lista de referencias. El cruce no puede hacerse sin ver las citas del cuerpo del texto.</span><span data-m-en style="display:none">This tool needs the <strong>complete document</strong>, not just the reference list. The cross-check cannot work without seeing the in-text citations.</span></div>
+      <div class="mstep">
+        <div class="mstep-n">A</div>
+        <div>
+          <h3><span data-m-es>Pegar texto</span><span data-m-en style="display:none">Paste text</span></h3>
+          <p><span data-m-es>Copie el manuscrito desde Word o PDF y péguelo en el área de texto, incluyendo la sección de Referencias al final. En cuanto detecta la sección, el botón Analizar cruce se habilita y un aviso confirma cuántas referencias encontró.</span><span data-m-en style="display:none">Copy the manuscript from Word or PDF and paste it into the text area, including the References section at the end. As soon as the section is detected the Analyze button becomes active and a notice confirms how many references were found.</span></p>
+        </div>
+      </div>
+      <div class="mstep">
+        <div class="mstep-n">B</div>
+        <div>
+          <h3><span data-m-es>Subir archivo Word (.docx)</span><span data-m-en style="display:none">Upload a Word file (.docx)</span></h3>
+          <p><span data-m-es>Haga clic o arrastre el archivo sobre la zona de carga. Solo se aceptan archivos <strong>.docx</strong>, hasta 10 MB. El formato antiguo <strong>.doc</strong> no funciona: ábralo en Word y guárdelo como .docx.</span><span data-m-en style="display:none">Click or drag the file onto the upload area. Only <strong>.docx</strong> files are accepted, up to 10 MB. The old <strong>.doc</strong> format does not work: open it in Word and save it as .docx.</span></p>
+        </div>
+      </div>
+      <div class="mcallout tip"><span>💡</span><span data-m-es>No hace falta que el documento esté limpio. Tablas, figuras, resúmenes y apéndices se procesan sin problema; el análisis solo mira las citas y la lista de referencias.</span><span data-m-en style="display:none">The document does not need to be tidy. Tables, figures, abstracts and appendices are handled fine; the analysis only looks at citations and the reference list.</span></div>
+    </div>
+
+    <!-- 04 -->
+    <div class="mblock" id="ms4">
+      <div class="mnum">04</div>
+      <h2><span data-m-es>Cómo encuentra la sección de referencias</span><span data-m-en style="display:none">How the reference section is found</span></h2>
+      <p><span data-m-es>El corte entre el cuerpo y la lista es la decisión más importante del análisis. BiblioCrossing busca un encabezado <strong>corto</strong> —cuatro palabras o menos, sin paréntesis ni años— y reconoce más de treinta variantes en español e inglés:</span><span data-m-en style="display:none">Splitting the body from the list is the single most important decision in the analysis. BiblioCrossing looks for a <strong>short</strong> heading — four words or fewer, no parentheses, no years — and recognises more than thirty variants in Spanish and English:</span></p>
+      <table class="mtable">
+        <thead><tr>
+          <th><span data-m-es>Español</span><span data-m-en style="display:none">Spanish</span></th>
+          <th><span data-m-es>Inglés</span><span data-m-en style="display:none">English</span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Referencias · Referencias bibliográficas · Referencias citadas</td><td>References · Reference list · Cited references</td></tr>
+          <tr><td>Bibliografía · Bibliografías · Fuentes bibliográficas</td><td>Bibliography · Bibliographies · Works consulted</td></tr>
+          <tr><td>Lista de referencias · Fuentes consultadas · Fuentes de información</td><td>Works Cited · Cited Works · Sources · Source list</td></tr>
+          <tr><td>Literatura citada · Obras citadas · Obras consultadas</td><td>Literature Cited · Works Referenced</td></tr>
+        </tbody>
+      </table>
+      <p><span data-m-es>Además tolera erratas de digitación: <em>«Refrencias»</em> o <em>«Bibliogafía»</em> se reconocen igual. La primera letra sí debe ser correcta, para que una palabra parecida como <em>«Diferencia»</em> —habitual como encabezado de columna en una tabla— no se confunda con <em>«Referencia»</em>.</span><span data-m-en style="display:none">It also tolerates typos: <em>"Refrencias"</em> or <em>"Bibliogafía"</em> are still recognised. The first letter must be right, so that a similar word like <em>"Diferencia"</em> — common as a table column header in Spanish — is not mistaken for <em>"Referencia"</em>.</span></p>
+      <p><span data-m-es>Si el documento tiene varios candidatos, se elige aquel cuyo texto siguiente <strong>de verdad parece una lista de referencias</strong>, midiendo qué proporción de sus líneas son entradas bibliográficas completas.</span><span data-m-en style="display:none">When a document has several candidates, the one whose following text <strong>actually looks like a reference list</strong> wins, measured by what share of its lines parse as complete bibliographic entries.</span></p>
+      <div class="mcallout warn"><span>⚠️</span><span data-m-es>Si el aviso dice que no se detectó la sección, revise que el encabezado exista y esté en su propia línea. No hace falta que tenga estilo de título en Word.</span><span data-m-en style="display:none">If the notice says no section was detected, check that the heading exists and sits on its own line. It does not need to use a Word heading style.</span></div>
+    </div>
+
+    <!-- 05 -->
+    <div class="mblock" id="ms5">
+      <div class="mnum">05</div>
+      <h2><span data-m-es>Interpretar los resultados</span><span data-m-en style="display:none">Reading the results</span></h2>
+      <p><span data-m-es>Cada fila de la tabla lleva una etiqueta. Las cuatro primeras son <strong>errores que corregir</strong>; las cuatro últimas son <strong>avisos</strong> que no siempre implican un error.</span><span data-m-en style="display:none">Every row in the table carries a label. The first four are <strong>errors to fix</strong>; the last four are <strong>notices</strong> that do not always mean something is wrong.</span></p>
+      <div class="mbadge-row">
+        <span class="mbadge mb-e"><span data-m-es>Cita sin referencia</span><span data-m-en style="display:none">Citation without reference</span></span>
+        <span class="mbadge mb-w"><span data-m-es>Referencia no citada</span><span data-m-en style="display:none">Uncited reference</span></span>
+        <span class="mbadge mb-w"><span data-m-es>Posible coincidencia</span><span data-m-en style="display:none">Possible match</span></span>
+        <span class="mbadge mb-e"><span data-m-es>Referencia duplicada</span><span data-m-en style="display:none">Duplicate reference</span></span>
+        <span class="mbadge mb-n"><span data-m-es>Falta la coma</span><span data-m-en style="display:none">Missing comma</span></span>
+        <span class="mbadge mb-n"><span data-m-es>Apellido ambiguo</span><span data-m-en style="display:none">Ambiguous surname</span></span>
+        <span class="mbadge mb-n"><span data-m-es>Comunicación personal</span><span data-m-en style="display:none">Personal communication</span></span>
+        <span class="mbadge mb-n"><span data-m-es>Requiere verificación manual</span><span data-m-en style="display:none">Needs manual check</span></span>
+      </div>
+      <table class="mtable">
+        <thead><tr>
+          <th><span data-m-es>Etiqueta</span><span data-m-en style="display:none">Label</span></th>
+          <th><span data-m-es>Qué significa y qué hacer</span><span data-m-en style="display:none">What it means and what to do</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><strong><span data-m-es>Cita sin referencia</span><span data-m-en style="display:none">Citation without reference</span></strong></td>
+            <td><span data-m-es>La cita aparece en el texto y no hay entrada en la lista. Suele faltar la referencia, o el apellido está escrito distinto en un sitio y otro.</span><span data-m-en style="display:none">The citation appears in the text with no entry in the list. Usually the reference is missing, or the surname is spelled differently in the two places.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span data-m-es>Referencia no citada</span><span data-m-en style="display:none">Uncited reference</span></strong></td>
+            <td><span data-m-es>La entrada está en la lista pero nunca se cita. O se cita en una tabla o pie de figura que no se detectó, o sobra en la lista.</span><span data-m-en style="display:none">The entry is in the list but never cited. Either it is cited in a table or figure caption that was not detected, or it does not belong in the list.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span data-m-es>Posible coincidencia</span><span data-m-en style="display:none">Possible match</span></strong></td>
+            <td><span data-m-es>Hay una cita y una referencia del <strong>mismo autor con año distinto</strong> — por ejemplo Ramírez (2019) en el texto y Ramírez (2020) en la lista. Casi siempre es una errata en uno de los dos lados. La fila nombra la contraparte para que compare.</span><span data-m-en style="display:none">A citation and a reference by the <strong>same author with a different year</strong> — Ramírez (2019) in the text and Ramírez (2020) in the list. Almost always a typo on one of the two sides. The row names the counterpart so you can compare.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span data-m-es>Referencia duplicada</span><span data-m-en style="display:none">Duplicate reference</span></strong></td>
+            <td><span data-m-es>La misma entrada aparece dos veces. Si son obras distintas del mismo autor y año, APA 7 pide diferenciarlas con sufijo de letra: 2020a, 2020b.</span><span data-m-en style="display:none">The same entry appears twice. If they are different works by the same author and year, APA 7 requires letter suffixes: 2020a, 2020b.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span data-m-es>Falta la coma</span><span data-m-en style="display:none">Missing comma</span></strong></td>
+            <td><span data-m-es>La cita se escribió sin la coma; por ejemplo <em>(García 2020)</em> en vez de <em>(García, 2020)</em>. La cita <strong>sí se tomó en cuenta</strong> para el cruce; es solo el formato lo que hay que corregir.</span><span data-m-en style="display:none">The citation is missing the comma; for example <em>(García 2020)</em> instead of <em>(García, 2020)</em>. The citation <strong>was still included</strong> in the cross-check; only the formatting needs fixing.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span data-m-es>Apellido ambiguo</span><span data-m-en style="display:none">Ambiguous surname</span></strong></td>
+            <td><span data-m-es>Dos autores distintos comparten apellido y año; por ejemplo, <em>Pérez, A.</em> y <em>Pérez, M.</em> No es un duplicado: APA 7 pide incluir la inicial en las citas del texto para distinguirlos.</span><span data-m-en style="display:none">Two different authors share a surname and year; for example, <em>Pérez, A.</em> and <em>Pérez, M.</em> This is not a duplicate: APA 7 asks for the initial in the in-text citations so they can be told apart.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span data-m-es>Comunicación personal</span><span data-m-en style="display:none">Personal communication</span></strong></td>
+            <td><span data-m-es>Se citan solo en el texto y <strong>no llevan entrada</strong> en la lista (APA 7, 8.9). Se excluyen del cruce y se muestran para que usted sepa que fueron reconocidas.</span><span data-m-en style="display:none">These are cited in text only and have <strong>no reference entry</strong> (APA 7, 8.9). They are excluded from the cross-check and listed so you can see they were recognised.</span></td>
+          </tr>
+          <tr>
+            <td><strong><span data-m-es>Requiere verificación manual</span><span data-m-en style="display:none">Needs manual check</span></strong></td>
+            <td><span data-m-es>Leyes, decretos, reglamentos y obras clásicas. En APA 7 usan un formato de referencia distinto y no se cruzan por apellido y año. Revíselas usted.</span><span data-m-en style="display:none">Laws, decrees, regulations and classical works. APA 7 gives them a different reference format, so they are not matched by surname and year. Check them yourself.</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mcallout tip"><span>📋</span><span data-m-es><strong>Copiar la clave.</strong> Junto a cada clave hay un botón de copiar. Al pulsarlo se copia el texto —por ejemplo <em>Pérez, 2020</em>— para pegarlo en el buscador de Word y localizar esa cita dentro del manuscrito. Confirma con una marca verde. Se alcanza también con el teclado, y si el navegador bloquea el portapapeles la clave queda seleccionada para copiarla con Ctrl+C.</span><span data-m-en style="display:none"><strong>Copying the key.</strong> Next to every key there is a copy button. Pressing it copies the text — <em>Pérez, 2020</em>, for example — so you can paste it into Word's search box and find that citation inside the manuscript. It confirms with a green check. It is reachable by keyboard too, and if the browser blocks clipboard access the key is selected instead so you can copy it with Ctrl+C.</span></div>
+      <div class="mcallout tip"><span>💡</span><span data-m-es><strong>Las citas secundarias se resuelven solas.</strong> Por ejemplo, en <em>(Ayala, 1983, como se citó en Sánchez, 2009)</em> la que debe estar en la lista es Sánchez, no Ayala. BiblioCrossing cruza la fuente citante e ignora la original, como pide APA 7.</span><span data-m-en style="display:none"><strong>Secondary citations resolve on their own.</strong> For example, in <em>(Ayala, 1983, as cited in Sánchez, 2009)</em> the work that belongs in the list is Sánchez, not Ayala. BiblioCrossing cross-checks the citing source and leaves the original alone, as APA 7 requires.</span></div>
+    </div>
+
+    <!-- 06 -->
+    <div class="mblock" id="ms6">
+      <div class="mnum">06</div>
+      <h2><span data-m-es>Exportar el reporte</span><span data-m-en style="display:none">Exporting the report</span></h2>
+      <div class="mstep">
+        <div class="mstep-n">📝</div>
+        <div>
+          <h3><span data-m-es>Descargar Word</span><span data-m-en style="display:none">Download Word</span></h3>
+          <p><span data-m-es>Genera un documento con el resumen, la tabla completa de inconsistencias y una leyenda que explica cada categoría. Útil para devolver al autor.</span><span data-m-en style="display:none">Produces a document with the summary, the full table of inconsistencies and a legend explaining each category. Useful to send back to the author.</span></p>
+        </div>
+      </div>
+      <div class="mstep">
+        <div class="mstep-n">📊</div>
+        <div>
+          <h3><span data-m-es>Descargar Excel</span><span data-m-en style="display:none">Download Excel</span></h3>
+          <p><span data-m-es>Dos hojas: una con el detalle fila por fila y otra con el resumen numérico. Útil para llevar control de varios manuscritos.</span><span data-m-en style="display:none">Two sheets: one with the row-by-row detail and one with the numeric summary. Useful for tracking several manuscripts.</span></p>
+        </div>
+      </div>
+      <div class="mcallout tip"><span>💡</span><span data-m-es>Ambos reportes llevan en el pie la versión de la app, para que un informe archivado registre con cuál se produjo. El botón <strong>Limpiar</strong> borra el texto y los resultados para empezar con otro manuscrito.</span><span data-m-en style="display:none">Both reports carry the app version in their footer, so an archived report records which one produced it. The <strong>Clear</strong> button wipes the text and the results so you can start on another manuscript.</span></div>
+    </div>
+
+    <!-- 07 -->
+    <div class="mblock" id="ms7">
+      <div class="mnum">07</div>
+      <h2><span data-m-es>Estilos visuales</span><span data-m-en style="display:none">Visual styles</span></h2>
+      <div class="mthemes">
+        <div class="mtheme mt-d"><div style="font-size:24px">🌑</div><h4><span data-m-es>Oscuro</span><span data-m-en style="display:none">Dark</span></h4><p><span data-m-es>Fondo azul profundo. Cómodo para sesiones largas.</span><span data-m-en style="display:none">Deep blue background. Comfortable for long sessions.</span></p></div>
+        <div class="mtheme mt-l"><div style="font-size:24px">☀️</div><h4><span data-m-es>Claro</span><span data-m-en style="display:none">Light</span></h4><p><span data-m-es>Fondo blanco, encabezado índigo.</span><span data-m-en style="display:none">White background, indigo header.</span></p></div>
+        <div class="mtheme mt-s"><div style="font-size:24px">📄</div><h4><span data-m-es>Sobrio</span><span data-m-en style="display:none">Plain</span></h4><p><span data-m-es>Papel cálido y tipografía serif. Pensado para imprimir o proyectar.</span><span data-m-en style="display:none">Warm paper and serif type. Meant for printing or projecting.</span></p></div>
+      </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="mblock" id="ms8">
+      <div class="mnum">08</div>
+      <h2><span data-m-es>Alcance y límites</span><span data-m-en style="display:none">Scope and limits</span></h2>
+      <p><span data-m-es><strong>BiblioCrossing funciona con cualquier manuscrito</strong> que cumpla dos condiciones: que use citas de <strong>autor y año</strong> al estilo APA, y que tenga una <strong>sección de referencias con encabezado</strong>. No está limitado a documentos de prueba ni a una disciplina.</span><span data-m-en style="display:none"><strong>BiblioCrossing works with any manuscript</strong> that meets two conditions: it uses <strong>author–date</strong> citations in the APA style, and it has a <strong>reference section with a heading</strong>. It is not restricted to sample documents or to any one discipline.</span></p>
+      <table class="mtable">
+        <thead><tr>
+          <th><span data-m-es>Sí funciona con</span><span data-m-en style="display:none">Works with</span></th>
+          <th><span data-m-es>No funciona con</span><span data-m-en style="display:none">Does not work with</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><span data-m-es>APA 7 y estilos autor–año equivalentes (Harvard, APA 6, Chicago autor–fecha)</span><span data-m-en style="display:none">APA 7 and equivalent author–date styles (Harvard, APA 6, Chicago author–date)</span></td>
+            <td><span data-m-es>Estilos numéricos: Vancouver, IEEE, ACS — las citas <em>[1]</em>, <em>(1)</em> no llevan autor ni año</span><span data-m-en style="display:none">Numeric styles: Vancouver, IEEE, ACS — citations like <em>[1]</em> or <em>(1)</em> carry no author or year</span></td>
+          </tr>
+          <tr>
+            <td><span data-m-es>Español e inglés, o documentos que mezclan ambos</span><span data-m-en style="display:none">Spanish and English, or documents mixing both</span></td>
+            <td><span data-m-es>Estilos de nota al pie: Chicago con notas, MLA con notas</span><span data-m-en style="display:none">Footnote styles: Chicago notes, MLA with notes</span></td>
+          </tr>
+          <tr>
+            <td><span data-m-es>Cualquier disciplina y extensión</span><span data-m-en style="display:none">Any discipline and any length</span></td>
+            <td><span data-m-es>Documentos sin sección de referencias — apéndices, material suplementario, cartas</span><span data-m-en style="display:none">Documents with no reference section — appendices, supplementary material, letters</span></td>
+          </tr>
+          <tr>
+            <td><span data-m-es>Autores corporativos y siglas (OMS, SINAC, INEC), si el documento define la sigla al menos una vez</span><span data-m-en style="display:none">Corporate authors and acronyms (WHO, SINAC, INEC), provided the document defines the acronym at least once</span></td>
+            <td><span data-m-es>Archivos <strong>.doc</strong> antiguos, PDF y ODT — conviértalos a .docx o pegue el texto</span><span data-m-en style="display:none">Legacy <strong>.doc</strong> files, PDF and ODT — convert to .docx or paste the text</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mcallout warn"><span>⚠️</span><span data-m-es><strong>Es un apoyo, no un dictamen.</strong> El análisis se basa en patrones de texto, y ningún patrón cubre todas las formas de escribir una cita. Un resultado limpio no garantiza que el manuscrito esté perfecto, y una fila marcada no siempre es un error. El criterio final es el del profesional editorial que revisa el documento.</span><span data-m-en style="display:none"><strong>It is support, not a verdict.</strong> The analysis relies on text patterns, and no set of patterns covers every way of writing a citation. A clean result does not guarantee a perfect manuscript, and a flagged row is not always an error. The final judgement belongs to the editorial professional reviewing the document.</span></div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px">
+      <button class="mbtn-back" id="btn-manual-back"><span data-m-es>← Volver a BiblioCrossing</span><span data-m-en style="display:none">← Back to BiblioCrossing</span></button>
+    </div>
+
+  </div>
+</div>
+
 
 <!-- ABOUT MODAL -->
 <div class="overlay" id="about-overlay">
@@ -334,13 +648,18 @@
 // ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
+// Versión de la app. Alimenta el distintivo del encabezado y el pie de los reportes
+// exportados, para que un informe archivado registre con qué versión se produjo.
+const APP_VERSION = 'V.1.2';
+
 const S = {
   lang: 'es',
   rawText: '',
   citations: [],
   references: [],
   issues: [],
-  date: ''
+  date: '',
+  analyzed: false
 };
 
 // ═══════════════════════════════════════
@@ -350,6 +669,14 @@ const T = {
   es: {
     'header.sub': 'Verificador de coherencia entre citas y referencias · APA 7',
     'ctrl.lang': 'Idioma', 'ctrl.theme': 'Tema', 'btn.about': 'Acerca de',
+    'btn.manual': '📖 Manual',
+    'btn.copy': 'Copiar clave', 'btn.copied': 'Copiado',
+    'btn.copyfail': 'No se pudo copiar. La clave quedó seleccionada: pulse Ctrl+C (⌘+C en Mac).',
+    'err.docx': 'Solo se aceptan archivos .docx. Si el suyo es .doc, ábralo en Word y guárdelo como .docx.',
+    'err.size': sz => `El archivo pesa ${sz} y el máximo es 10 MB. Pegue el texto en la otra pestaña.`,
+    'err.xlsx': 'La librería de Excel no se cargó. Revise la conexión a internet y recargue la página.',
+    'err.read': 'No se pudo leer el archivo:',
+    'lic.code': 'Código:', 'lic.content': 'Contenido:', 'lic.source': '💻 Código fuente',
     'tab.paste': 'Pegar texto', 'tab.upload': 'Subir .docx',
     'card.input': 'Entrada del documento',
     'hint.paste': 'Pega el texto completo del manuscrito incluyendo la sección de Referencias al final. Se detecta automáticamente el encabezado en español ("Referencias", "Bibliografía", "Fuentes consultadas"…) o en inglés ("References", "Bibliography", "Works Cited"…), con o sin numeración y tolerando errores tipográficos.',
@@ -370,16 +697,27 @@ const T = {
     'stat.mult': 'En citas agrupadas', 'stat.ok': 'Sin inconsistencias',
     'th.n': '#', 'th.elem': 'Elemento', 'th.tipo': 'Tipo',
     'th.clave': 'Clave', 'th.prob': 'Problema', 'th.det': 'Detalle',
-    'iss.huer': 'Cita sin referencia', 'iss.fant': 'Referencia no citada', 'iss.mult': 'Cita múltiple',
+    'iss.huer': 'Cita sin referencia', 'iss.fant': 'Referencia no citada',
     'iss.soft': 'Posible coincidencia', 'iss.dup': 'Referencia duplicada',
+    'iss.coma': 'Falta la coma',
+    'iss.pers': 'Comunicación personal', 'iss.norm': 'Requiere verificación manual',
+    'iss.ambig': 'Apellido ambiguo',
     'tp.par': 'Parentética', 'tp.nar': 'Narrativa', 'tp.ref': 'Referencia', 'tp.mul': 'Múltiple',
     'det.huer': 'Esta cita aparece en el texto pero no tiene referencia correspondiente en la lista bibliográfica.',
     'det.fant': 'Esta referencia está en la lista bibliográfica pero no fue citada en el texto.',
-    'det.mult': 'Cita múltiple detectada. Verifique manualmente que todas las referencias incluidas estén presentes en la lista.',
-    'det.soft': 'Posible coincidencia: existe una cita y una referencia del mismo autor con años similares (ej. 2020 vs 2020a). Verifique el sufijo de año.',
+    'det.soft': a => a
+      ? `Posible coincidencia con <strong>${escHtml(a)}</strong> de la lista de referencias: mismo autor, año distinto. Casi siempre es un error de digitación en la cita o en la referencia; haga que coincidan.`
+      : 'Posible coincidencia: existe una cita y una referencia del mismo autor con años similares (ej. 2020 vs 2020a). Verifique el sufijo de año.',
     'det.dup': 'Esta referencia aparece más de una vez con el mismo autor y año. En APA 7 deben diferenciarse con sufijo de letra (2020a, 2020b…).',
     'stat.soft': 'Posibles coincidencias', 'stat.dup': 'Refs. duplicadas',
-    'notice.ok': n => `✅ Se detectaron <strong style="color:var(--verde)">${n} referencia${n!==1?'s':''}</strong> en la sección de Referencias. El cruce está listo.`,
+    'stat.coma': 'Citas sin coma',
+    'stat.excl': 'Excluidas del cruce',
+    'stat.ambig': 'Apellidos ambiguos',
+    'det.ambig': 'Dos autores distintos comparten apellido y año. No es una referencia duplicada: APA 7 pide incluir la inicial del nombre en las citas del texto para distinguirlos (por ejemplo, «A. Pérez, 2019» y «M. Pérez, 2019»).',
+    'det.pers': 'Las comunicaciones personales se citan solo en el texto y no llevan entrada en la lista de referencias (APA 7, 8.9). Se excluyó del cruce; no es un error.',
+    'det.norm': 'Ley, decreto, normativa u obra clásica. En APA 7 estas fuentes no se cruzan por apellido y año porque usan un formato de referencia distinto. Verifique manualmente que la fuente esté completa.',
+    'det.coma': 'La cita se escribió sin coma entre el autor y el año («García 2020»). APA 7 exige «García, 2020». La cita sí se tomó en cuenta para el cruce.',
+    'notice.ok': n => `Se detectaron <strong style="color:var(--verde)">${n} referencia${n!==1?'s':''}</strong> en la sección de Referencias. El cruce está listo.`,
     'notice.warn': 'No se detectó la sección de referencias. Incluya un encabezado reconocible como <strong>"Referencias"</strong>, <strong>"Bibliografía"</strong>, <strong>"Fuentes consultadas"</strong> u otros equivalentes en español o inglés.',
     'notice.proc': 'Procesando archivo…',
     'results.sub': d => `Análisis realizado el ${d}`,
@@ -389,11 +727,19 @@ const T = {
     'exp.by': 'Creado por Alexander Chinchilla Serrano · Vicerrectoría de Investigación · UNED · San José, Costa Rica · 2026',
     'exp.legend': 'Cita sin referencia: cita en el texto sin entrada en la lista de referencias. Referencia no citada: entrada en la lista sin cita correspondiente en el texto. Cita múltiple: agrupa más de un autor/año, requiere verificación manual.',
     'exp.summary': 'Resumen',
-    'about.body': `<p><strong>BiblioCrossing</strong> realiza un <strong>cruce automatizado</strong> entre las citas del texto y la lista de referencias, siguiendo la norma APA 7.ª edición. Detecta citas parenéticas <em>(Autor, año)</em> y narrativas <em>Autor (año)</em>, e identifica:</p><ul style="margin:10px 0 10px 20px;line-height:2"><li><strong>Citas huérfanas</strong> — aparecen en el texto pero no tienen referencia correspondiente.</li><li><strong>Referencias fantasma</strong> — están en la lista pero nunca se citan en el texto.</li><li><strong>Inconsistencias</strong> — cita y referencia existen, pero con año diferente, nombre abreviado vs. completo u otras variaciones. Estos casos suelen ser errores reales de los autores.</li><li><strong>Referencias duplicadas</strong> y posibles coincidencias por sufijo de año.</li></ul><p><strong>Nota sobre los resultados:</strong> cuando el programa reporta “sin coincidencia”, no siempre significa que la referencia falte. Puede indicar que la cita y la referencia no están escritas de forma idéntica (año diferente, sigla vs. nombre completo, puntuación distinta). En esos casos, la solución es hacer consistente la cita con su referencia. Las citas secundarias (<em>citado por / cited by</em>) y las citas múltiples requieren verificación manual.</p><p>Desarrollada en la <strong>Vicerrectoría de Investigación · UNED</strong>, Costa Rica. Los resultados son una guía de revisión; la verificación final es responsabilidad del profesional editorial.</p><hr class="modal-divider"><div class="modal-meta"><span><strong>Desarrollado por:</strong> Alexander Chinchilla Serrano</span><span><strong>Institución:</strong> Vicerrectoría de Investigación · Universidad Estatal a Distancia (UNED) · San José, Costa Rica</span><span><strong>Año:</strong> 2026</span><span><strong>Licencia:</strong> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" style="color:var(--accent2)">Creative Commons BY-NC-SA 4.0</a></span></div>`
+    'about.body': `<p><strong>BiblioCrossing</strong> realiza un <strong>cruce automatizado</strong> entre las citas del texto y la lista de referencias, siguiendo la norma APA 7.ª edición. Detecta citas parenéticas <em>(Autor, año)</em> y narrativas <em>Autor (año)</em>, e identifica:</p><ul style="margin:10px 0 10px 20px;line-height:2"><li><strong>Citas huérfanas</strong> — aparecen en el texto pero no tienen referencia correspondiente.</li><li><strong>Referencias fantasma</strong> — están en la lista pero nunca se citan en el texto.</li><li><strong>Inconsistencias</strong> — cita y referencia existen, pero con año diferente, nombre abreviado vs. completo u otras variaciones. Estos casos suelen ser errores reales de los autores.</li><li><strong>Referencias duplicadas</strong> y posibles coincidencias por sufijo de año.</li></ul><p><strong>Nota sobre los resultados:</strong> cuando el programa reporta “sin coincidencia”, no siempre significa que la referencia falte. Puede indicar que la cita y la referencia no están escritas de forma idéntica (año diferente, sigla vs. nombre completo, puntuación distinta). En esos casos, la solución es hacer consistente la cita con su referencia. Las citas secundarias (<em>como se citó en / as cited in</em>) se resuelven usando la fuente citante, que es la que debe aparecer en la lista. Las comunicaciones personales y las normas jurídicas se excluyen del cruce y se marcan aparte, porque en APA 7 no llevan entrada por apellido y año. Las citas múltiples requieren verificación manual.</p><p>Desarrollada en la <strong>Vicerrectoría de Investigación · UNED</strong>, Costa Rica. Los resultados son una guía de revisión; la verificación final es responsabilidad del profesional editorial.</p><hr class="modal-divider"><div class="modal-meta"><span><strong>Desarrollado por:</strong> Alexander Chinchilla Serrano</span><span><strong>Institución:</strong> Vicerrectoría de Investigación · Universidad Estatal a Distancia (UNED) · San José, Costa Rica</span><span><strong>Año:</strong> 2026</span><span><strong>Licencia del código:</strong> <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" style="color:var(--accent2)">AGPL-3.0-or-later</a></span><span><strong>Licencia del contenido:</strong> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:var(--accent2)">Creative Commons BY 4.0</a></span><span><strong>Código fuente:</strong> <a href="https://github.com/alexescazu24-ship-it/apa7-citation-crossing" target="_blank" style="color:var(--accent2)">GitHub</a></span></div>`
   },
   en: {
     'header.sub': 'Citation–reference consistency checker · APA 7',
     'ctrl.lang': 'Language', 'ctrl.theme': 'Theme', 'btn.about': 'About',
+    'btn.manual': '📖 Manual',
+    'btn.copy': 'Copy key', 'btn.copied': 'Copied',
+    'btn.copyfail': 'Could not copy. The key is selected: press Ctrl+C (⌘+C on Mac).',
+    'err.docx': 'Only .docx files are accepted. If yours is a .doc, open it in Word and save it as .docx.',
+    'err.size': sz => `The file is ${sz} and the limit is 10 MB. Paste the text in the other tab instead.`,
+    'err.xlsx': 'The Excel library did not load. Check your internet connection and reload the page.',
+    'err.read': 'Could not read the file:',
+    'lic.code': 'Code:', 'lic.content': 'Content:', 'lic.source': '💻 Source code',
     'tab.paste': 'Paste text', 'tab.upload': 'Upload .docx',
     'card.input': 'Document input',
     'hint.paste': 'Paste the full manuscript text including the References section at the end. Headings in Spanish ("Referencias", "Bibliografía", "Fuentes consultadas"…) or English ("References", "Bibliography", "Works Cited"…) are detected automatically, with or without numbering and with tolerance for typos.',
@@ -414,16 +760,27 @@ const T = {
     'stat.mult': 'In grouped citations', 'stat.ok': 'No inconsistencies',
     'th.n': '#', 'th.elem': 'Element', 'th.tipo': 'Type',
     'th.clave': 'Key', 'th.prob': 'Issue', 'th.det': 'Detail',
-    'iss.huer': 'Citation without reference', 'iss.fant': 'Uncited reference', 'iss.mult': 'Multiple citation',
+    'iss.huer': 'Citation without reference', 'iss.fant': 'Uncited reference',
     'iss.soft': 'Possible match', 'iss.dup': 'Duplicate reference',
+    'iss.coma': 'Missing comma',
+    'iss.pers': 'Personal communication', 'iss.norm': 'Needs manual check',
+    'iss.ambig': 'Ambiguous surname',
     'tp.par': 'Parenthetical', 'tp.nar': 'Narrative', 'tp.ref': 'Reference', 'tp.mul': 'Multiple',
     'det.huer': 'This citation appears in the text but has no corresponding entry in the reference list.',
     'det.fant': 'This reference is in the reference list but was not cited in the text.',
-    'det.mult': 'Multiple citation detected. Verify manually that all referenced authors are present in the reference list.',
-    'det.soft': 'Possible match: there is a citation and a reference from the same author with similar years (e.g. 2020 vs 2020a). Check the year suffix.',
+    'det.soft': a => a
+      ? `Possible match with <strong>${escHtml(a)}</strong> in the reference list: same author, different year. This is almost always a typo on one of the two sides; make them agree.`
+      : 'Possible match: there is a citation and a reference from the same author with similar years (e.g. 2020 vs 2020a). Check the year suffix.',
     'det.dup': 'This reference appears more than once with the same author and year. APA 7 requires a letter suffix to distinguish them (2020a, 2020b…).',
     'stat.soft': 'Possible matches', 'stat.dup': 'Duplicate refs.',
-    'notice.ok': n => `✅ Detected <strong style="color:var(--verde)">${n} reference${n!==1?'s':''}</strong> in the References section. Ready to analyze.`,
+    'stat.coma': 'Citations missing comma',
+    'stat.excl': 'Excluded from cross-check',
+    'stat.ambig': 'Ambiguous surnames',
+    'det.ambig': 'Two different authors share a surname and year. This is not a duplicate entry: APA 7 asks for the author initial in the in-text citations so the two can be told apart (for example, "A. Pérez, 2019" and "M. Pérez, 2019").',
+    'det.pers': 'Personal communications are cited in text only and have no reference list entry (APA 7, 8.9). Excluded from the cross-check; this is not an error.',
+    'det.norm': 'Law, decree, regulation or classical work. APA 7 does not match these by surname and year because they use a different reference format. Verify the source manually.',
+    'det.coma': 'The citation was written without a comma between author and year ("García 2020"). APA 7 requires "García, 2020". The citation was still included in the cross-check.',
+    'notice.ok': n => `Detected <strong style="color:var(--verde)">${n} reference${n!==1?'s':''}</strong> in the References section. Ready to analyze.`,
     'notice.warn': 'No references section detected. Please include a recognizable heading such as <strong>"References"</strong>, <strong>"Bibliography"</strong>, <strong>"Works Cited"</strong> or other Spanish/English equivalents.',
     'notice.proc': 'Processing file…',
     'results.sub': d => `Analysis performed on ${d}`,
@@ -433,7 +790,7 @@ const T = {
     'exp.by': 'Created by Alexander Chinchilla Serrano · Vice-Rectory for Research · UNED · San José, Costa Rica · 2026',
     'exp.legend': 'Citation without reference: in-text citation with no matching reference list entry. Uncited reference: reference list entry with no matching in-text citation. Multiple citation: groups more than one author/year, requires manual verification.',
     'exp.summary': 'Summary',
-    'about.body': `<p><strong>BiblioCrossing</strong> performs an <strong>automated cross-check</strong> between in-text citations and the reference list, following APA 7th edition conventions. It detects both parenthetical <em>(Author, year)</em> and narrative <em>Author (year)</em> citations, and identifies:</p><ul style="margin:10px 0 10px 20px;line-height:2"><li><strong>Orphan citations</strong> — cited in the text but with no matching reference entry.</li><li><strong>Ghost references</strong> — in the reference list but never cited in the text.</li><li><strong>Inconsistencies</strong> — citation and reference both exist, but with a different year, abbreviated vs. full name, or other variation. These cases often indicate real author errors.</li><li><strong>Duplicate references</strong> and possible year-suffix mismatches.</li></ul><p><strong>About the results:</strong> when the tool reports “no match,” it does not always mean the reference is missing. It may indicate that the citation and the reference are not written identically (different year, acronym vs. full name, different punctuation). In those cases, the fix is to make the citation and reference consistent. Secondary citations (<em>cited by / citado por</em>) and multiple citations require manual verification.</p><p>Developed at the <strong>Vice-Rectory for Research · UNED</strong>, Costa Rica. Results are a review guide; final verification remains the responsibility of the editorial professional.</p><hr class="modal-divider"><div class="modal-meta"><span><strong>Developed by:</strong> Alexander Chinchilla Serrano</span><span><strong>Institution:</strong> Vice-Rectory for Research · Universidad Estatal a Distancia (UNED) · San José, Costa Rica</span><span><strong>Year:</strong> 2026</span><span><strong>License:</strong> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" style="color:var(--accent2)">Creative Commons BY-NC-SA 4.0</a></span></div>`
+    'about.body': `<p><strong>BiblioCrossing</strong> performs an <strong>automated cross-check</strong> between in-text citations and the reference list, following APA 7th edition conventions. It detects both parenthetical <em>(Author, year)</em> and narrative <em>Author (year)</em> citations, and identifies:</p><ul style="margin:10px 0 10px 20px;line-height:2"><li><strong>Orphan citations</strong> — cited in the text but with no matching reference entry.</li><li><strong>Ghost references</strong> — in the reference list but never cited in the text.</li><li><strong>Inconsistencies</strong> — citation and reference both exist, but with a different year, abbreviated vs. full name, or other variation. These cases often indicate real author errors.</li><li><strong>Duplicate references</strong> and possible year-suffix mismatches.</li></ul><p><strong>About the results:</strong> when the tool reports “no match,” it does not always mean the reference is missing. It may indicate that the citation and the reference are not written identically (different year, acronym vs. full name, different punctuation). In those cases, the fix is to make the citation and reference consistent. Secondary citations (<em>as cited in / como se citó en</em>) are resolved using the citing source, which is the one that belongs in the list. Personal communications and legal sources are excluded from the cross-check and flagged separately, since APA 7 gives them no surname-and-year entry. Multiple citations require manual verification.</p><p>Developed at the <strong>Vice-Rectory for Research · UNED</strong>, Costa Rica. Results are a review guide; final verification remains the responsibility of the editorial professional.</p><hr class="modal-divider"><div class="modal-meta"><span><strong>Developed by:</strong> Alexander Chinchilla Serrano / email: fchinchillas@uned.ac.cr</span><span><strong>Institution:</strong> Vice-Rectory for Research · Universidad Estatal a Distancia (UNED) · San José, Costa Rica</span><span><strong>Year:</strong> 2026</span><span><strong>Code licence:</strong> <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" style="color:var(--accent2)">AGPL-3.0-or-later</a></span><span><strong>Content licence:</strong> <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:var(--accent2)">Creative Commons BY 4.0</a></span><span><strong>Source code:</strong> <a href="https://github.com/alexescazu24-ship-it/apa7-citation-crossing" target="_blank" style="color:var(--accent2)">GitHub</a></span></div>`
   }
 };
 
@@ -454,7 +811,62 @@ function normAuthor(n) {
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z]/g, '');
 }
-function makeKey(name, year) { return normAuthor(name) + '_' + year; }
+// ── Siglas de autor corporativo ──────────────────────────────────────────────
+// "(Organización Mundial de la Salud [OMS], 2020)" and a later "(OMS, 2020)" are the same
+// entity. The pairing is declared by the document itself, so it is read from the text
+// instead of a fixed list — which is what makes national bodies work (SINAC, MINAE, INEC,
+// SENARA), since no global list would carry them.
+let ALIASES = new Map();
+
+// Words that can belong to a proper name: capitalised ones, plus the lowercase connectors
+// that sit inside one ("Organización Mundial de la Salud").
+const NAME_WORD = /^(?:[A-ZÁÉÍÓÚÑ][\wÁÉÍÓÚÑáéíóúñ'’.-]*|de|del|la|las|los|el|y|e|para|of|the|and|for|in|on)$/;
+
+// The words immediately before a bracket, walking backwards while they can still be part of
+// a name. Reading the whole run instead would pick up the previous sentence: in "El estudio
+// fue realizado por la Organización Mundial de la Salud [OMS]" the first capitalised word
+// is "Estudio", not the organisation.
+function nameBefore(text) {
+  const toks = String(text).split(/\s+/).filter(Boolean);
+  const out = [];
+  for (let i = toks.length - 1; i >= 0 && out.length < 10; i--) {
+    if (!NAME_WORD.test(toks[i])) break;
+    out.unshift(toks[i]);
+  }
+  while (out.length && !/^[A-ZÁÉÍÓÚÑ]/.test(out[0])) out.shift();
+  return out.join(' ');
+}
+
+function buildAliases(text) {
+  const map = new Map();
+  const re = /([^()\[\]\n]{4,140}?)\s*[\[(]\s*([A-ZÁÉÍÓÚÑ]{2,10})\s*[\])]/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    const name = nameBefore(m[1]);
+    const canon = findFirstAuthor(name);
+    if (!canon) continue;
+    const acr = normAuthor(m[2]), c = normAuthor(canon);
+    if (!acr || !c || acr === c || map.has(acr)) continue;
+    // The acronym has to be plausibly built from the name: same opening letter, and enough
+    // capitalised words to account for its letters. This rejects method abbreviations that
+    // are not authors at all — "Análisis de Varianza (ANOVA)", "…polimerasa (PCR)".
+    const caps = (name.match(/\b[A-ZÁÉÍÓÚÑ]/g) || []).length;
+    if (acr[0] !== c[0] || caps < acr.length - 2) continue;
+    map.set(acr, c);
+  }
+  return map;
+}
+
+function makeKey(name, year) {
+  const a = normAuthor(name);
+  return (ALIASES.get(a) || a) + '_' + year;
+}
+
+// "Xu, J. G." → "jg". Empty when the entry opens with a corporate name or a title.
+function initialsOf(entry) {
+  const m = String(entry).match(/^[^,(]{1,45},\s*((?:[A-ZÁÉÍÓÚÑ]\.\s*)+)/);
+  return m ? m[1].replace(/[^A-Za-zÁÉÍÓÚÑ]/g, '').toLowerCase() : '';
+}
 
 // Surname particles to skip when scanning for first author word.
 // "De la Torre" → skip "De" → return "Torre"; consistent with refs starting "de la Torre"
@@ -469,6 +881,14 @@ const CONNECTORS = new Set([
   'donde','cuando','mientras','durante','conforme','mediante','ante','tras','desde',
   'entre','sin','bajo','sobre','no','ni','pero','sino','aunque','incluso','incluyendo',
   'after','before','although','however','therefore','thus','hence','whereas','per','via'
+]);
+
+// Articles and determiners that open a title. Without these, a work cited by its title —
+// "El estado de la educación (2020)" — yields "El" as its author, and every title starting
+// with the same article collapses onto one key.
+const DETERMINERS = new Set([
+  'el','la','los','las','un','una','unos','unas','lo','este','esta','estos','estas',
+  'ese','esa','esos','esas','aquel','aquella','the','an','this','these','that','those'
 ]);
 
 // Words that are NOT author surnames (appear before years but don't belong to a person)
@@ -491,23 +911,110 @@ function findFirstAuthor(text) {
     const c = w.replace(/^\P{L}+/u, '').replace(/[^\p{L}\-]+$/gu, '');
     if (c.length < 2 || !/^\p{Lu}/u.test(c)) continue;
     const norm = normAuthor(c);
-    if (norm.length < 2 || NON_AUTHORS.has(norm) || PARTICLES.has(norm) || CONNECTORS.has(norm)) continue;
+    // The determiner test uses the WHOLE word, not `norm`: normAuthor cuts at the hyphen, so
+    // the real surnames "El-Dougdoug" and "UN-Water" reduce to "el" and "un" and would be
+    // thrown away as articles. Their keys stay collapsed — citation and reference collapse
+    // the same way, so they still match each other.
+    const whole = c.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]/g, '');
+    if (norm.length < 2 || NON_AUTHORS.has(norm) || PARTICLES.has(norm) ||
+        CONNECTORS.has(norm) || DETERMINERS.has(whole)) continue;
     return c;
   }
   return null;
 }
 
-// Extract {name, year} from a citation fragment like:
+// Date tokens accepted as a "year" in both citations and references:
+//   2020 · 2020a · s.f. · s. f. · n.d. · en prensa · in press
+// Written with explicit case classes instead of the /i flag: under /iu the flag would
+// also make \p{Lu} match lowercase and break the organization guard below.
+const YEAR_SRC = String.raw`\d{4}[a-zA-Z]?|[sS]\.?\s?[fF]\.?|[nN]\.?\s?[dD]\.?|[eE]n\s+prensa|[iI]n\s+press`;
+
+// Year preceded by its comma — the correct APA form: "García, 2020"
+const RE_CIT_YEAR = new RegExp(String.raw`[,;]\s*(${YEAR_SRC})(?![\p{L}\d])`, 'u');
+// Same year with the comma missing — "(García 2020)". A name-like token is required right
+// before it so "(Tabla 3 2020)" or "(1990 2020)" are not read as citations.
+const RE_CIT_YEAR_NC = new RegExp(String.raw`(?:\p{Lu}[\p{L}\-']{1,35}|\bal\.)\s+(${YEAR_SRC})(?![\p{L}\d])`, 'u');
+// Opening date parenthesis of a reference entry. Tolerates a Spanish or English date tail
+// — "(2020, 15 de marzo)" / "(2020, March 15)" — and keeps only the year.
+const RE_REF_DATE = new RegExp(String.raw`\(\s*(${YEAR_SRC})(?:\s*[,;][^)]{0,40})?\s*\)`, 'u');
+
+// s.f. / n.d. → "s.f."   ·   en prensa / in press → "en prensa"
+// so a Spanish citation still cross-matches an English reference and vice versa.
+function normYear(raw) {
+  const v = String(raw).trim();
+  if (/^\d{4}[a-zA-Z]?$/.test(v)) return v.toLowerCase();
+  const c = v.toLowerCase().replace(/[.\s]/g, '');
+  if (c === 'sf' || c === 'nd') return 's.f.';
+  if (c === 'enprensa' || c === 'inpress') return 'en prensa';
+  return v.toLowerCase();
+}
+
+// ── Exclusiones APA 7 ────────────────────────────────────────────────────────
+// Sources that are NOT cross-checked by surname + year. Each is reported under its own
+// category so the editor can see it was handled — never as an orphan or a ghost.
+
+// Stable id for a source that has no usable surname ("Ley N.º 7600" → "leyn7600").
+// Unlike normAuthor it keeps digits, so two different laws do not collide.
+function slug(s) {
+  return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]/g, '').slice(0, 40);
+}
+
+// Personal communications (APA 7, 8.9) are cited in text only and never enter the
+// reference list, so a missing entry is correct, not an error.
+const RE_PERSCOM = /\b(?:comunicaci[oó]n(?:es)?\s+personal(?:es)?|personal\s+communications?|entrevista\s+personal|personal\s+interview|conversaci[oó]n\s+personal)\b/i;
+
+// Secondary citations. The work that belongs in the reference list is the CITING one:
+// in "(Ayala, 1983, como se citó en Sánchez, 2009)" only Sánchez, 2009 is cross-checked
+// and Ayala, 1983 is left alone — it has no entry of its own by design.
+const SEC_SRC = String.raw`citado\s+(?:por|en)|como\s+se\s+cit[oó]\s+en|como\s+se\s+cita\s+en|seg[uú]n\s+se\s+cit[oó]\s+en|as\s+cited\s+in|cited\s+(?:by|in)|apud`;
+const RE_SEC      = new RegExp(String.raw`\b(?:${SEC_SRC})\b`, 'i');
+const RE_SEC_TAIL = new RegExp(String.raw`\b(?:${SEC_SRC})\s+(.+)`, 'i');
+
+// Laws, decrees and other normative sources use a different APA 7 reference format, and
+// classical works are cited in text only. Neither can be matched by surname + year.
+// Titles of classical works are anchored to the start: "Torá" would otherwise swallow the
+// real surname "Tora", and "Corán" the surname "Coran".
+// A word from these lists that is followed by a comma and an initial is a surname inside an
+// author list — "…, Ley, M., & Vargas, R." — not a legal source. A real one is followed by
+// its number or its title: "Ley N.º 7600", "Decreto Ejecutivo 41", "Constitución Política".
+// Both cases are spelled out so the /i flag is not load-bearing, and no \p{...} escape is
+// used: under /iu a Unicode property class case-folds and stops meaning "uppercase only".
+const NOT_SURNAME = String.raw`(?!\s*,\s*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]\.)`;
+const RE_NORMATIVE = new RegExp([
+  String.raw`\b(?:ley(?:es)?|decreto|reglamento|c[oó]digo|constituci[oó]n|resoluci[oó]n|directriz|normativa|convenio|convenci[oó]n|tratado|estatuto|ordenanza)\b` + NOT_SURNAME,
+  String.raw`\b(?:act|statute|regulation|constitution|directive|treaty|charter|ordinance)\b` + NOT_SURNAME,
+  String.raw`^\s*(?:la|el|the)?\s*(?:biblia|bible|talmud|torah|cor[áa]n|qur['’]?[aá]n|koran|il[ií]ada|odisea|iliad|odyssey)\b`,
+  String.raw`\b(?:trad|trans|ca)\.\s*\d{3,4}`,
+  String.raw`\d\s*(?:a\.\s?C\.|d\.\s?C\.|B\.?C\.?E\.)`
+].join('|'), 'i');
+
+// A normative source announces itself in the author position — "Ley N.º 7600…", "Costa
+// Rica. Decreto Ejecutivo…" — so only the opening of the head is tested. Together with
+// NOT_SURNAME this keeps a colliding surname deep in a long author list, such as
+// "…, Falasca, S., Tora, S., …", from disqualifying the whole entry.
+const normHead = h => RE_NORMATIVE.test(String(h).slice(0, 120));
+
+// Extract {name, year, noComma} from a citation fragment like:
 //  "García y López, 2020"   "véase García, 2020"   "García, 2020, p. 45"
-//  Also handles semicolon before year: "Di Rienzo et al; 2008"
+//  "Di Rienzo et al; 2008"  "García 2020" (comma missing → detected and flagged)
 function parseCitFragment(frag) {
   frag = frag.trim();
-  const ym = frag.match(/[,;]\s*(\d{4}[a-z]?)\b/);
-  if (!ym) return null;
-  const year = ym[1];
-  const beforeYear = frag.slice(0, frag.indexOf(ym[0]));
-  const name = findFirstAuthor(beforeYear);
-  return name ? { name, year } : null;
+  let ym = frag.match(RE_CIT_YEAR);
+  let noComma = false, cut;
+  if (ym) {
+    cut = ym.index;
+  } else {
+    // "=" marks a legend or a formula — "(O= Osorio y Habte 2002; Pk = Pikovskaya)" — never
+    // a citation. Only the comma-less path needs this guard.
+    if (frag.includes('=')) return null;
+    ym = frag.match(RE_CIT_YEAR_NC);
+    if (!ym) return null;
+    noComma = true;
+    cut = ym.index + ym[0].length - ym[1].length; // keep the surname on the left of the cut
+  }
+  const name = findFirstAuthor(frag.slice(0, cut));
+  return name ? { name, year: normYear(ym[1]), noComma } : null;
 }
 
 function escHtml(s) {
@@ -528,6 +1035,12 @@ function debounce(fn, ms) {
 // PARSING
 // ═══════════════════════════════════════
 function splitDoc(text) {
+  // Every entry point — analysis, paste check, file upload — hands the whole document to
+  // this function, so it is the one place where the acronym table can be built from the
+  // complete text. It has to be: the definition often sits in the body while the citation
+  // that uses the acronym sits in the reference list, or the other way round.
+  ALIASES = buildAliases(text);
+
   // Normalize: lowercase, strip accents, keep only letters and spaces
   function normLine(s) {
     return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z\s]/g,'').trim();
@@ -560,9 +1073,14 @@ function splitDoc(text) {
   ];
 
   const lines = text.split('\n');
+  const cands = [];
   for (let i = 0; i < lines.length; i++) {
     const tr = lines[i].trim();
     if (!tr || tr.length > 80) continue;
+    // A heading carries no parenthesis and no year. Without this, an article title such as
+    // "La verificación bibliográfica en el proceso editorial…" matched the "bibliográfica"
+    // anchor and the whole body was parsed as the reference list.
+    if (/[()]/.test(tr) || /\d{4}/.test(tr)) continue;
 
     // Strip leading numbering / bullets (e.g. "5.", "IV.", "5)", "•")
     const stripped = tr.replace(/^[\d]+[.):\-]\s*/,'').replace(/^[IVXivx]+[.):\-]\s*/,'').replace(/^[•\-–—*]\s*/,'').trim();
@@ -570,50 +1088,83 @@ function splitDoc(text) {
     if (!norm) continue;
 
     const words = norm.split(/\s+/);
+    // Real headings are short: "Referencias", "Lista de referencias",
+    // "Fuentes de información consultadas". Prose sentences are not.
+    if (words.length > 4) continue;
 
     // 1. Exact anchor match: any word in the line matches an anchor exactly
-    for (const w of words) {
-      if (w.length < 6) continue;
-      if (ANCHORS.includes(w)) return { body: lines.slice(0,i).join('\n'), refs: lines.slice(i+1).join('\n'), found: true };
-    }
+    if (words.some(w => w.length >= 6 && ANCHORS.includes(w))) { cands.push(i); continue; }
 
     // 2. Compact match: entire line (no spaces) matches an anchor
     //    e.g. "Lista de referencias" → "listadereferencias"
-    const compact = norm.replace(/\s+/g,'');
-    if (ANCHORS.includes(compact)) return { body: lines.slice(0,i).join('\n'), refs: lines.slice(i+1).join('\n'), found: true };
+    if (ANCHORS.includes(norm.replace(/\s+/g,''))) { cands.push(i); continue; }
 
-    // 3. Typo tolerance: first word ≤ 2 edits from an anchor (only on short heading lines ≤ 3 words)
-    if (words.length <= 3) {
-      const fw = words[0];
-      if (fw.length >= 6) {
-        for (const anchor of ANCHORS) {
-          if (Math.abs(fw.length - anchor.length) <= 2 && lev(fw, anchor) <= 2) {
-            return { body: lines.slice(0,i).join('\n'), refs: lines.slice(i+1).join('\n'), found: true };
-          }
-        }
-      }
+    // 3. Typo tolerance: first word ≤ 2 edits from an anchor (only on short heading lines ≤ 3
+    //    words). The first letter has to agree: without that guard "Diferencia" — a table
+    //    column header — sits exactly 2 edits from "referencia" and steals the split from the
+    //    real heading hundreds of lines later.
+    if (words.length <= 3 && words[0].length >= 6 &&
+        ANCHORS.some(a => a[0] === words[0][0] &&
+                          Math.abs(words[0].length - a.length) <= 2 && lev(words[0], a) <= 2)) {
+      cands.push(i);
     }
   }
-  return { body: text, refs: '', found: false };
+  if (!cands.length) return { body: text, refs: '', found: false };
+
+  // Several lines can look like a heading. A split is only plausible when the text BEFORE it
+  // contains citations — otherwise an anchor word in the front matter wins, the body ends up
+  // empty and the whole article is parsed as the reference list.
+  // Among the plausible ones, score by DENSITY rather than by count: a real reference list is
+  // almost entirely reference entries, while a tail that swallows half the article plus its
+  // tables parses more entries in absolute terms but only a handful per line. Counting alone
+  // hands the split to the earliest candidate every time. Ties take the later one, since the
+  // list closes the document.
+  let best = null, bestDen = -1, fallback = null, fallbackN = -1;
+  for (const i of cands) {
+    if (extractCitations(lines.slice(0, i).join('\n')).length === 0) continue;
+    const tail = lines.slice(i + 1);
+    const filled = tail.filter(l => l.trim().length > 2).length || 1;
+    const n = parseRefList(tail.join('\n')).refs.length;
+    if (n >= fallbackN) { fallbackN = n; fallback = i; }
+    // A handful of entries is too little to judge density on; those fall back to the count.
+    if (n >= 3 && n / filled >= bestDen) { bestDen = n / filled; best = i; }
+  }
+  if (best === null) best = fallback !== null ? fallback : cands[cands.length - 1];
+  return { body: lines.slice(0, best).join('\n'), refs: lines.slice(best + 1).join('\n'), found: true };
 }
 
 function extractCitations(bodyText) {
   const map = new Map();
   let m;
 
-  const reParen = /\(([^()]{2,200})\)/g;
+  // Up to 600 characters: a grouped citation with nine sources runs well past 200, and the
+  // old limit dropped the whole block silently. The character class still forbids nested
+  // parentheses, and parseCitFragment remains the gate on what counts as a citation.
+  const reParen = /\(([^()]{2,600})\)/g;
   while ((m = reParen.exec(bodyText)) !== null) {
     const inner = m[1];
-    if (!/[,;] ?\d{4}/.test(inner)) continue;
-    // Secondary citations (citado por / cited by / apud): extract only the citing source
-    const secRe = /\b(?:citado\s+(?:por|en)|cited\s+(?:by|in)|apud)\s+(.+)/i;
-    const secM = inner.match(secRe);
+    // Loose prefilter: any date-looking token. parseCitFragment is the real gate.
+    if (!/\d{4}|\bs\.?\s?f\.|\bn\.?\s?d\.|\ben\s+prensa\b|\bin\s+press\b/i.test(inner)) continue;
+    // Personal communication. The name sits inside the parenthesis — "(J. Smith, personal
+    // communication, 2020)" — or just before it — "J. Smith (personal communication, 2020)".
+    if (RE_PERSCOM.test(inner)) {
+      const who = findFirstAuthor(inner.split(RE_PERSCOM)[0])
+               || findFirstAuthor(bodyText.slice(Math.max(0, m.index - 60), m.index)) || '—';
+      const yr = (inner.match(/\d{4}/) || [''])[0];
+      const key = 'pers_' + slug(who) + '_' + yr;
+      if (!map.has(key)) map.set(key, { key, fa: who, year: yr, type: 'par', isMulti: false, noComma: false, excl: 'pers', raw: m[0] });
+      continue;
+    }
+
+    // Secondary citation: cross-check the citing source, leave the original alone.
+    const secM = inner.match(RE_SEC_TAIL);
     if (secM) {
       const years = inner.match(/\d{4}[a-z]?/g) || [];
-      const pair = parseCitFragment(secM[1] + ', ' + (years[years.length - 1] || ''));
+      const pair = parseCitFragment(secM[1])
+                || parseCitFragment(secM[1] + ', ' + (years[years.length - 1] || ''));
       if (pair) {
         const key = makeKey(pair.name, pair.year);
-        if (!map.has(key)) map.set(key, { key, fa: pair.name, year: pair.year, type: 'par', isMulti: false, raw: m[0] });
+        if (!map.has(key)) map.set(key, { key, fa: pair.name, year: pair.year, type: 'par', isMulti: false, noComma: false, raw: m[0] });
       }
       continue;
     }
@@ -623,14 +1174,30 @@ function extractCitations(bodyText) {
     const isMulti = segs.length > 1;
 
     segs.forEach(seg => {
+      // Normative or classical source. Tested on the text before the year, so a reference
+      // to "la ley de aguas" inside a normal citation does not trigger it. This runs before
+      // parseCitFragment because "Ley 7600" has no surname and would be dropped silently.
+      // Cut at the LAST four-digit group: it is the date. Cutting at the first one loses the
+      // law number — "Ley N.º 7600, 1996" would reduce to "Ley N.º " and every law in the
+      // document would collapse onto a single entity.
+      const yrs = seg.match(/\d{4}/g) || [];
+      const yr = yrs[yrs.length - 1] || '';
+      const head = yr ? seg.slice(0, seg.lastIndexOf(yr)) : seg;
+      if (normHead(head)) {
+        const key = 'norm_' + slug(head) + '_' + yr;
+        if (!map.has(key)) map.set(key, { key, fa: head.replace(/[\s,;.]+$/, '').slice(0, 60), year: yr,
+          type: isMulti ? 'mul' : 'par', isMulti, noComma: false, excl: 'norm', raw: m[0] });
+        return;
+      }
       const pair = parseCitFragment(seg);
       if (!pair) return;
       const key = makeKey(pair.name, pair.year);
       if (!map.has(key)) {
         map.set(key, { key, fa: pair.name, year: pair.year,
-          type: isMulti ? 'mul' : 'par', isMulti, raw: m[0] });
+          type: isMulti ? 'mul' : 'par', isMulti, noComma: pair.noComma, raw: m[0] });
       } else {
         if (isMulti) map.get(key).isMulti = true;
+        if (pair.noComma) map.get(key).noComma = true;
       }
     });
   }
@@ -638,22 +1205,44 @@ function extractCitations(bodyText) {
   // Narrative: Author (Year) — handles single word, two-word surnames, initials,
   // two-author (Osorio & Habte), et al., and comma before year: "et al., (2010)"
   const ARTICLES = /^(el|la|los|las|un|una|the|a|an|de|del|en|al|lo|le|su|por|con|si|que|y|o|e|i|según|segun|para|como|así|asi|también|tambien|además|ademas|donde|cuando|mientras|durante|conforme|mediante|ante|tras|desde|entre|sin|bajo|sobre|after|before|per|via|no|ni|pero|sino|aunque|however|although|therefore|thus|hence|as|by|from|with|without|into|onto|upon|within)$/i;
-  const reNarr = /(\p{Lu}[\p{L}\-']{1,35}(?:\s+(?:\p{Lu}[\p{L}\-']{1,35}|\p{Lu}\.?))?(?:\s*(?:&|y|and)\s*\p{Lu}[\p{L}\-']{1,35})?(?:\s+et\s+al\.)?),?\s+\((\d{4}[a-z]?)\)/gu;
+  // Words that legitimately sit INSIDE a proper name ("Universidad Estatal a Distancia").
+  // Only these justify looking one extra word back for the organization guard; a general
+  // connector like "como" or "según" means the previous capital belongs to another clause.
+  const NAME_CONN = /^(?:de|del|la|las|los|el|y|e|a|al|en|of|the|and|for|&)$/i;
+  const clean = w => (w || '').replace(/[,;:.()[\]«»“”"']/g, '');
+  // A word closing a sentence. Initials ("J.") and "al." are not sentence ends.
+  const sentEnd = w => /[.!?:;»”"]$/.test(w || '') && !/^(?:\p{Lu}\.|al\.)$/u.test(w || '');
+  const capWord = w => { const c = clean(w); return c.length > 1 && /^\p{Lu}/u.test(c) && !ARTICLES.test(c); };
+
+  const reNarr = new RegExp(String.raw`(\p{Lu}[\p{L}\-']{1,35}(?:\s+(?:\p{Lu}[\p{L}\-']{1,35}|\p{Lu}\.?))?(?:\s*(?:&|y|and)\s*\p{Lu}[\p{L}\-']{1,35})?(?:\s+et\s+al\.)?),?\s+\((${YEAR_SRC})(?:\s*[,;][^)]{0,40})?\)`, 'gu');
   while ((m = reNarr.exec(bodyText)) !== null) {
     const before = bodyText.slice(Math.max(0, m.index - 80), m.index).trimEnd();
-    const prev = before.match(/(\S+)\s+(\S+)?\s*$/) || [];
-    const w1 = (prev[1] || '').replace(/[,;:.()[\]]/g, '');
-    const w2 = (prev[2] || '').replace(/[,;:.()[\]]/g, '');
+    const toks = before.split(/\s+/).filter(Boolean);
+    const at = i => toks[toks.length - i] || '';   // at(1) = word right before the match
     // Skip if narrative match is the original source before a secondary-citation marker
     const afterM = bodyText.slice(m.index + m[0].length, m.index + m[0].length + 80);
-    if (/(?:citado\s+(?:por|en)|cited\s+(?:by|in)|apud)/i.test(afterM)) continue;
-    // Preceding capitalized non-article word → likely last word of org/title name → skip
-    if ([w1, w2].some(w => w.length > 1 && /^\p{Lu}/u.test(w) && !ARTICLES.test(w))) continue;
+    if (RE_SEC.test(afterM)) continue;
+
+    // Organization/title guard: a capital right before the match usually means the match is
+    // the tail of a proper name. But a sentence boundary cancels it — in "…en México.
+    // García (2020)" the capital of "México" is not part of any organization name, and in
+    // "…bibliográficas. Autores como Ramírez (2019)" neither is "Autores".
+    if (!sentEnd(at(1))) {
+      if (capWord(at(1))) continue;
+      if (NAME_CONN.test(clean(at(1))) && capWord(at(2)) && !sentEnd(at(2))) continue;
+    }
 
     const authorStr = m[1].replace(/\s+et\s+al\.?/gi, '').trim();
+    const year = normYear(m[2]);
+    // "La Constitución Política (1949)" is normative, not an author — set it aside instead
+    // of reporting "Constitución" as an orphan.
+    if (normHead(authorStr)) {
+      const key = 'norm_' + slug(authorStr) + '_' + year;
+      if (!map.has(key)) map.set(key, { key, fa: authorStr.slice(0, 60), year, type: 'nar', isMulti: false, excl: 'norm', raw: m[0] });
+      continue;
+    }
     const fa = findFirstAuthor(authorStr);
     if (!fa) continue;
-    const year = m[2];
     const key = makeKey(fa, year);
     if (!map.has(key)) {
       map.set(key, { key, fa, year, type: 'nar', isMulti: false, raw: m[0] });
@@ -667,18 +1256,26 @@ function parseRefList(refText) {
   const map = new Map();
   let entries = [];
 
-  // Prefer blank-line separation (preserved when pasting from Word/PDF)
-  if (/\n\s*\n/.test(refText)) {
-    entries = refText.split(/\n\s*\n/)
-      .map(b => b.replace(/\n/g, ' ').replace(/\s{2,}/g, ' ').trim())
-      .filter(b => b.length > 5);
-  } else {
-    // Fallback: new entry when a line starts with a capital letter
-    const lines = refText.split('\n').map(l => l.trim()).filter(l => l.length > 2);
+  // Blank lines separate entries when the source preserves them, but a single stray blank
+  // line must not glue the rest of the list into one block — so every block is segmented
+  // again by date. The old rule ("a line starting with a capital opens an entry") broke two
+  // common cases: a wrapped "Recuperado de https://…" / "Retrieved from…" line became a
+  // phantom entry, and an entry opening with a lowercase particle ("de la Torre, M.
+  // (2020)…") was swallowed by the previous one.
+  // An entry is still mid-flight when its last line breaks inside the author list —
+  // "…Pérez-Rojas, G., &" or "…García, J., López, M." Only a closed entry may be flushed,
+  // so a reference whose (year) lands on its second line is not split at the year.
+  const MID_ENTRY = /(?:[&,;]|,\s*\p{Lu}\.|\b(?:y|and|et)\.?)\s*$/u;
+  for (const block of refText.split(/\n\s*\n/)) {
+    const lines = block.split('\n').map(l => l.trim()).filter(l => l.length > 2);
     let cur = '';
     for (const line of lines) {
-      if (/^\p{Lu}/u.test(line) && cur) { entries.push(cur.trim()); cur = line; }
-      else cur = cur ? cur + ' ' + line : line;
+      // A line opens a new entry when it carries its own date parenthesis; a line without
+      // one continues the entry being built. The window has to clear a full APA 7 author
+      // list — up to 20 names before the date, which reaches past 250 characters.
+      if (cur && !MID_ENTRY.test(cur) && RE_REF_DATE.test(line.slice(0, 600))) {
+        entries.push(cur.trim()); cur = line;
+      } else cur = cur ? cur + ' ' + line : line;
     }
     if (cur.trim().length > 5) entries.push(cur.trim());
   }
@@ -686,16 +1283,29 @@ function parseRefList(refText) {
   const dups = [];
   entries.forEach(entry => {
     if (entry.length < 10) return;
-    const ym = entry.match(/\((\d{4}[a-z]?)\)/);
+    const ym = entry.match(RE_REF_DATE);
     if (!ym) return;
-    const year = ym[1];
-    const fa = findFirstAuthor(entry.slice(0, entry.indexOf('(' + ym[1] + ')')));
+    const year = normYear(ym[1]);
+    const head = entry.slice(0, ym.index);
+    // Tested only on the author position, so a reference whose TITLE mentions a law
+    // ("Smith, J. (2020). The Clean Air Act and…") is not excluded by mistake.
+    if (normHead(head)) {
+      const k = 'norm_' + slug(head) + '_' + year;
+      if (!map.has(k)) map.set(k, { key: k, fa: head.replace(/[\s,;.]+$/, '').slice(0, 60), year, raw: entry, type: 'ref', excl: 'norm' });
+      return;
+    }
+    const fa = findFirstAuthor(head);
     if (!fa) return;
     const key = makeKey(fa, year);
     if (!map.has(key)) {
       map.set(key, { key, fa, year, raw: entry, type: 'ref' });
     } else {
-      dups.push({ key, fa, year, raw: entry, type: 'ref', iss: 'dup' });
+      // The same surname and year can be two different people — "Xu, G." and "Xu, J." — a
+      // case APA 7 resolves by putting the initial into the in-text citation. That is an
+      // ambiguity for the editor to fix, not a duplicated entry to delete.
+      const ia = initialsOf(entry), ib = initialsOf((map.get(key) || {}).raw || '');
+      dups.push({ key, fa, year, raw: entry, type: 'ref',
+                  iss: (ia && ib && ia !== ib) ? 'ambig' : 'dup' });
     }
   });
 
@@ -718,26 +1328,64 @@ function runAnalysis() {
   S.citations = cits; S.references = rrefs;
   S.date = new Date().toLocaleDateString(S.lang==='es'?'es-CR':'en-US',{year:'numeric',month:'long',day:'numeric'});
 
-  const citKeys = new Set(cits.map(c=>c.key));
-  const refKeys = new Set(rrefs.map(r=>r.key));
+  // Sources excluded from the author-year cross-check — personal communications, laws and
+  // classical works — are kept out of both key sets so they can never turn into an orphan
+  // or a ghost, and are reported under their own category instead.
+  const liveCits = cits.filter(c => !c.excl);
+  const liveRefs = rrefs.filter(r => !r.excl);
+  const citKeys = new Set(liveCits.map(c=>c.key));
+  const refKeys = new Set(liveRefs.map(r=>r.key));
   const issues = [];
 
   // Strips letter suffix for soft-match: garcia_2020a → garcia_2020
-  const baseKey = k => k.replace(/_(\d{4})[a-z]$/, '_$1');
+  const baseKey  = k => k.replace(/_(\d{4})[a-z]$/, '_$1');
+  const authorOf = k => k.slice(0, k.lastIndexOf('_'));
+  const yearOf   = k => { const y = parseInt(k.slice(k.lastIndexOf('_') + 1), 10); return isNaN(y) ? null : y; };
+
+  // Pair an orphan citation with a ghost reference by the same author when the years differ
+  // by a letter suffix or by at most two — "Ramírez (2019)" against "Ramírez, J. (2020)".
+  // That signature is a typo on one of the two sides, not a missing source, and the editor's
+  // fix is to make them agree. Reporting it once, on the citation, beats reporting the same
+  // problem twice as an orphan and a ghost. Only entries unmatched on BOTH sides take part,
+  // so a reference that some other citation already matches is never stolen.
+  const orphans = liveCits.filter(c => !refKeys.has(c.key));
+  const ghosts  = liveRefs.filter(r => !citKeys.has(r.key));
+  const paired  = new Set();
+  const softOf  = new Map();
+  orphans.forEach(c => {
+    const cy = yearOf(c.key);
+    const hit = ghosts.find(r => !paired.has(r.key) && r.key !== c.key &&
+      authorOf(r.key) === authorOf(c.key) &&
+      (baseKey(r.key) === baseKey(c.key) ||
+       (cy !== null && yearOf(r.key) !== null && Math.abs(yearOf(r.key) - cy) <= 2)));
+    if (hit) { paired.add(hit.key); softOf.set(c.key, hit); }
+  });
 
   cits.forEach(c => {
+    if (c.excl) { issues.push({ ...c, iss: c.excl }); return; }
+    // Missing comma before the year — "(García 2020)". Reported on its own row; the
+    // citation still takes part in the cross-check.
+    if (c.noComma) issues.push({ ...c, iss: 'coma' });
     if (refKeys.has(c.key)) return;
-    const nearRef = rrefs.some(r => baseKey(r.key) === baseKey(c.key) && r.key !== c.key);
-    issues.push({...c, iss: nearRef ? 'soft' : 'huer'});
+    const hit = softOf.get(c.key);
+    if (hit) { issues.push({ ...c, iss: 'soft', alt: `${hit.fa}, ${hit.year}` }); return; }
+    // Letter-suffix sibling that some other citation already matches — the list has 2013a
+    // and 2013b and only one of them is cited. The fix is usually a wrong suffix in the
+    // text, not a missing source, so it stays a "check this" rather than a plain orphan.
+    const sib = liveRefs.find(r => baseKey(r.key) === baseKey(c.key) && r.key !== c.key);
+    issues.push({ ...c, iss: sib ? 'soft' : 'huer', alt: sib ? `${sib.fa}, ${sib.year}` : '' });
   });
   rrefs.forEach(r => {
+    if (r.excl) { issues.push({ ...r, iss: r.excl }); return; }
     if (citKeys.has(r.key)) return;
-    const nearCit = cits.some(c => baseKey(c.key) === baseKey(r.key) && c.key !== r.key);
-    issues.push({...r, iss: nearCit ? 'soft' : 'fant'});
+    if (paired.has(r.key)) return;   // ya se reportó junto a su cita
+    const sib = liveCits.find(c => baseKey(c.key) === baseKey(r.key) && c.key !== r.key);
+    issues.push({ ...r, iss: sib ? 'soft' : 'fant', alt: sib ? `${sib.fa}, ${sib.year}` : '' });
   });
   dupRefs.forEach(d => issues.push(d));
 
   S.issues = issues;
+  S.analyzed = true;
   renderResults();
 }
 
@@ -751,6 +1399,9 @@ function renderResults() {
   const mult = C.filter(c=>c.isMulti).length;
   const soft = I.filter(x=>x.iss==='soft').length;
   const dup  = I.filter(x=>x.iss==='dup').length;
+  const coma = I.filter(x=>x.iss==='coma').length;
+  const excl = I.filter(x=>x.iss==='pers'||x.iss==='norm').length;
+  const ambig = I.filter(x=>x.iss==='ambig').length;
   const ok   = C.filter(c=>R.some(r=>r.key===c.key)).length;
 
   document.getElementById('stats-row').innerHTML = `
@@ -762,6 +1413,9 @@ function renderResults() {
     <div class="stat-card s-ok"><div class="stat-num">${ok}</div><div class="stat-label">${t('stat.ok')}</div></div>
     ${soft>0?`<div class="stat-card" style="border-color:rgba(249,115,22,.4)"><div class="stat-num" style="color:#f97316">${soft}</div><div class="stat-label">${t('stat.soft')}</div></div>`:''}
     ${dup>0?`<div class="stat-card" style="border-color:rgba(168,85,247,.4)"><div class="stat-num" style="color:#a855f7">${dup}</div><div class="stat-label">${t('stat.dup')}</div></div>`:''}
+    ${coma>0?`<div class="stat-card" style="border-color:rgba(14,165,233,.4)"><div class="stat-num" style="color:#0ea5e9">${coma}</div><div class="stat-label">${t('stat.coma')}</div></div>`:''}
+    ${excl>0?`<div class="stat-card" style="border-color:rgba(100,116,139,.4)"><div class="stat-num" style="color:#64748b">${excl}</div><div class="stat-label">${t('stat.excl')}</div></div>`:''}
+    ${ambig>0?`<div class="stat-card" style="border-color:rgba(219,39,119,.4)"><div class="stat-num" style="color:#db2777">${ambig}</div><div class="stat-label">${t('stat.ambig')}</div></div>`:''}
   `;
   document.getElementById('results-sub').textContent = t('results.sub', S.date);
 
@@ -775,18 +1429,19 @@ function renderResults() {
     tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">✅</div><div>${t('empty')}</div></div></td></tr>`;
   } else {
     const typeMap = { par:'tp.par par t-par', nar:'tp.nar nar t-nar', ref:'tp.ref ref t-ref', mul:'tp.mul mul t-mul' };
-    const issMap  = { huer:'iss.huer b-huer', fant:'iss.fant b-fant', soft:'iss.soft b-soft', dup:'iss.dup b-dup' };
+    const issMap  = { huer:'iss.huer b-huer', fant:'iss.fant b-fant', soft:'iss.soft b-soft', dup:'iss.dup b-dup', coma:'iss.coma b-coma', pers:'iss.pers b-pers', norm:'iss.norm b-norm', ambig:'iss.ambig b-ambig' };
     tbody.innerHTML = I.map((x,i) => {
       const [tKey,tCls] = (typeMap[x.type]||'tp.par par t-par').split(' ');
       const [iKey,iCls] = (issMap[x.iss]||'iss.huer b-huer').split(' ');
       const short = (x.raw||'').length>90 ? (x.raw||'').slice(0,87)+'…' : (x.raw||'');
+      const clave = `${x.fa||''}, ${x.year||''}`;
       return `<tr>
         <td class="num-cell">${i+1}</td>
         <td><div class="cell-text" title="${escHtml(x.raw)}">${escHtml(short)}</div></td>
         <td><span class="type-tag ${tCls}">${t(tKey)}</span></td>
-        <td><span class="cell-key">${escHtml(x.fa||'')}, ${x.year||''}</span></td>
+        <td><span class="cell-key">${escHtml(clave)}</span><button class="btn-copy" data-copy="${escHtml(clave)}" data-tip="${escHtml(t('btn.copy'))}" aria-label="${escHtml(t('btn.copy'))}"><svg class="ico-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button></td>
         <td><span class="badge ${iCls}">${t(iKey)}</span></td>
-        <td><div class="cell-text">${t('det.'+x.iss)}</div></td>
+        <td><div class="cell-text">${t('det.'+x.iss, x.alt || '')}</div></td>
       </tr>`;
     }).join('');
   }
@@ -794,6 +1449,55 @@ function renderResults() {
   const rs = document.getElementById('results-section');
   rs.style.display = 'block';
   setTimeout(() => rs.scrollIntoView({ behavior:'smooth', block:'start' }), 50);
+}
+
+// Copia la clave al portapapeles. La API asíncrona solo existe en contextos seguros y estas
+// apps se abren a menudo con file:// o desde Google Drive, así que hay un respaldo con
+// execCommand: sin él el botón no haría nada justo en el caso de uso más común.
+function copyKey(btn) {
+  const txt = btn.dataset.copy || '';
+  const flash = (cls, msg) => {
+    btn.classList.add(cls);
+    btn.dataset.tip = t(msg);
+    btn.setAttribute('aria-label', t(msg));
+    setTimeout(() => {
+      btn.classList.remove(cls);
+      btn.dataset.tip = t('btn.copy');
+      btn.setAttribute('aria-label', t('btn.copy'));
+    }, 1800);
+  };
+  const ok = () => flash('copied', 'btn.copied');
+  // Si ninguna vía funciona el botón no puede quedarse mudo: se selecciona la clave para
+  // que el usuario la copie a mano, y el icono avisa en rojo.
+  const fail = () => {
+    const k = btn.previousElementSibling;
+    if (k) {
+      const r = document.createRange();
+      r.selectNodeContents(k);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+    flash('failed', 'btn.copyfail');
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(txt).then(ok, () => legacyCopy(txt, ok, fail));
+  } else {
+    legacyCopy(txt, ok, fail);
+  }
+}
+
+function legacyCopy(txt, ok, fail) {
+  const ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let hecho = false;
+  try { hecho = document.execCommand('copy'); } catch (e) { hecho = false; }
+  document.body.removeChild(ta);   // quitarlo antes, para no pisar la selección de fail()
+  (hecho ? ok : fail)();
 }
 
 function stripHtml(s) { const d=document.createElement('div'); d.innerHTML=s; return d.textContent; }
@@ -807,11 +1511,14 @@ function exportWord() {
   const fant = I.filter(x=>x.iss==='fant').length;
   const soft = I.filter(x=>x.iss==='soft').length;
   const dup  = I.filter(x=>x.iss==='dup').length;
+  const coma = I.filter(x=>x.iss==='coma').length;
+  const excl = I.filter(x=>x.iss==='pers'||x.iss==='norm').length;
+  const ambig = I.filter(x=>x.iss==='ambig').length;
 
   const rows = I.map((x,i) => {
     const tp = T[S.lang]['tp.'+x.type] || x.type;
     const is = T[S.lang]['iss.'+x.iss] || x.iss;
-    const dt = T[S.lang]['det.'+x.iss] || '';
+    const dt = t('det.'+x.iss, x.alt || '');
     const el = escHtml((x.raw||'').slice(0,130));
     return `<tr><td style="text-align:center">${i+1}</td><td>${el}</td><td>${tp}</td><td>${escHtml(x.fa||'')}, ${x.year||''}</td><td><b>${is}</b></td><td>${dt}</td></tr>`;
   }).join('');
@@ -834,15 +1541,15 @@ tr:nth-child(even) td{background:#f8f9fe}
 <p><b>${t('exp.date')}</b> ${D}</p>
 <div class="box"><b>${t('exp.summary')}:</b>&nbsp;
 ${S.lang==='es'
-  ?`Citas: <b>${C.length}</b> · Referencias: <b>${R.length}</b> · Sin referencia: <b>${huer}</b> · No citadas: <b>${fant}</b>${soft>0?` · Posibles coincidencias: <b>${soft}</b>`:''}${dup>0?` · Refs. duplicadas: <b>${dup}</b>`:''}`
-  :`Citations: <b>${C.length}</b> · References: <b>${R.length}</b> · Without reference: <b>${huer}</b> · Uncited: <b>${fant}</b>${soft>0?` · Possible matches: <b>${soft}</b>`:''}${dup>0?` · Duplicate refs.: <b>${dup}</b>`:''}`}
+  ?`Citas: <b>${C.length}</b> · Referencias: <b>${R.length}</b> · Sin referencia: <b>${huer}</b> · No citadas: <b>${fant}</b>${soft>0?` · Posibles coincidencias: <b>${soft}</b>`:''}${dup>0?` · Refs. duplicadas: <b>${dup}</b>`:''}${coma>0?` · Citas sin coma: <b>${coma}</b>`:''}${excl>0?` · Excluidas del cruce: <b>${excl}</b>`:''}${ambig>0?` · Apellidos ambiguos: <b>${ambig}</b>`:''}`
+  :`Citations: <b>${C.length}</b> · References: <b>${R.length}</b> · Without reference: <b>${huer}</b> · Uncited: <b>${fant}</b>${soft>0?` · Possible matches: <b>${soft}</b>`:''}${dup>0?` · Duplicate refs.: <b>${dup}</b>`:''}${coma>0?` · Missing comma: <b>${coma}</b>`:''}${excl>0?` · Excluded: <b>${excl}</b>`:''}${ambig>0?` · Ambiguous: <b>${ambig}</b>`:''}`}
 </div>
 <table><thead><tr>
 <th style="width:35px">#</th><th>${t('th.elem')}</th><th style="width:90px">${t('th.tipo')}</th>
 <th style="width:100px">${t('th.clave')}</th><th style="width:130px">${t('th.prob')}</th><th>${t('th.det')}</th>
 </tr></thead><tbody>${rows||`<tr><td colspan="6">✅ ${t('empty')}</td></tr>`}</tbody></table>
 <div class="leg">${t('exp.legend')}</div>
-<div class="foot">${t('exp.by')}</div>
+<div class="foot">BiblioCrossing ${APP_VERSION} · ${t('exp.by')}</div>
 </body></html>`;
 
   const blob = new Blob(['﻿', html], { type: 'application/msword' });
@@ -854,7 +1561,7 @@ ${S.lang==='es'
 // EXPORT EXCEL
 // ═══════════════════════════════════════
 function exportExcel() {
-  if (typeof XLSX === 'undefined') { alert('SheetJS no disponible'); return; }
+  if (typeof XLSX === 'undefined') { alert(t('err.xlsx')); return; }
   const { citations: C, references: R, issues: I, date: D } = S;
   const headers = [t('th.n'), t('th.elem'), t('th.tipo'), t('th.clave'), t('th.prob'), t('th.det')];
   const dataRows = I.map((x,i) => [
@@ -862,7 +1569,7 @@ function exportExcel() {
     T[S.lang]['tp.'+x.type]||x.type,
     `${x.fa||''}, ${x.year||''}`,
     T[S.lang]['iss.'+x.iss]||x.iss,
-    T[S.lang]['det.'+x.iss]||''
+    stripHtml(t('det.'+x.iss, x.alt || ''))
   ]);
   const summaryRows = [
     ['BiblioCrossing — ' + t('exp.subtitle')],
@@ -876,7 +1583,11 @@ function exportExcel() {
     [t('stat.ok'), C.filter(c=>R.some(r=>r.key===c.key)).length],
     [t('stat.soft'), I.filter(x=>x.iss==='soft').length],
     [t('stat.dup'),  I.filter(x=>x.iss==='dup').length],
+    [t('stat.coma'), I.filter(x=>x.iss==='coma').length],
+    [t('stat.excl'), I.filter(x=>x.iss==='pers'||x.iss==='norm').length],
+    [t('stat.ambig'), I.filter(x=>x.iss==='ambig').length],
     [],
+    ['BiblioCrossing ' + APP_VERSION],
     [t('exp.by')]
   ];
 
@@ -893,9 +1604,12 @@ function exportExcel() {
 // ═══════════════════════════════════════
 // FILE UPLOAD
 // ═══════════════════════════════════════
+const MAX_FILE = 10 * 1024 * 1024;   // el mismo límite que anuncia la interfaz
+
 function handleFile(file) {
   if (!file) return;
-  if (!file.name.toLowerCase().endsWith('.docx')) { alert('Solo se aceptan archivos .docx'); return; }
+  if (!file.name.toLowerCase().endsWith('.docx')) { alert(t('err.docx')); return; }
+  if (file.size > MAX_FILE) { alert(t('err.size', fmtSize(file.size))); return; }
   showNotice('upload', 'proc');
 
   document.getElementById('file-name').textContent = file.name;
@@ -921,7 +1635,7 @@ function handleFile(file) {
       })
       .catch(err => {
         const el = document.getElementById('notice-upload');
-        el.innerHTML = `<span class="notice-icon">❌</span><span>Error: ${escHtml(err.message)}</span>`;
+        el.innerHTML = `<span class="notice-icon">❌</span><span>${escHtml(t('err.read'))} ${escHtml(err.message)}</span>`;
         el.className = 'notice notice-warn visible';
       });
   };
@@ -962,7 +1676,7 @@ function checkPaste() {
   }
   const { refs, found } = splitDoc(val);
   if (found) {
-    const n = parseRefList(refs).length;
+    const n = parseRefList(refs).refs.length;
     showNotice('paste', 'ok', n);
     document.getElementById('btn-analyze').disabled = false;
   } else {
@@ -981,7 +1695,7 @@ function clearAll() {
   document.getElementById('notice-paste').className = 'notice';
   document.getElementById('results-section').style.display = 'none';
   document.getElementById('btn-analyze').disabled = true;
-  S.citations = []; S.references = []; S.issues = [];
+  S.citations = []; S.references = []; S.issues = []; S.analyzed = false;
 }
 
 // ═══════════════════════════════════════
@@ -998,8 +1712,11 @@ function applyLang(lang) {
     const v = T[lang][el.dataset.i18nPh];
     if (v) el.placeholder = v;
   });
-  // Re-render if results visible
-  if (document.getElementById('results-section').style.display !== 'none') renderResults();
+  // Re-render only when an analysis has actually run. Reading the inline style instead
+    // reports "visible" on first load, because the stylesheet — not the element — is what
+    // hides it.
+  if (S.analyzed) renderResults();
+  applyManualLang(lang);
   checkPaste();
 }
 
@@ -1011,6 +1728,26 @@ function applyTheme(skin) {
 // ═══════════════════════════════════════
 // ABOUT
 // ═══════════════════════════════════════
+// El manual es una vista aparte, no un modal: ocupa toda la página y permite navegar
+// por su índice. Se muestra ocultando #app-view.
+function openManual() {
+  document.getElementById('app-view').style.display = 'none';
+  document.getElementById('manual-view').classList.add('visible');
+  window.scrollTo(0, 0);
+}
+function closeManual() {
+  document.getElementById('manual-view').classList.remove('visible');
+  document.getElementById('app-view').style.display = '';
+  window.scrollTo(0, 0);
+}
+// El manual lleva sus dos idiomas en el propio HTML — es demasiado texto para el objeto T —
+// así que el conmutador de idioma alterna qué mitad se muestra.
+function applyManualLang(lang) {
+  const en = lang === 'en';
+  document.querySelectorAll('[data-m-es]').forEach(el => el.style.display = en ? 'none' : '');
+  document.querySelectorAll('[data-m-en]').forEach(el => el.style.display = en ? '' : 'none');
+}
+
 function openAbout() {
   document.getElementById('about-body').innerHTML = T[S.lang]['about.body'];
   document.getElementById('about-overlay').classList.add('open');
@@ -1026,6 +1763,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Skin
   document.querySelectorAll('[data-skin]').forEach(b => b.addEventListener('click', () => applyTheme(b.dataset.skin)));
   // About
+  document.getElementById('btn-manual').addEventListener('click', openManual);
+  document.getElementById('btn-manual-back').addEventListener('click', closeManual);
   document.getElementById('btn-about').addEventListener('click', openAbout);
   document.getElementById('btn-close-about').addEventListener('click', closeAbout);
   document.getElementById('about-overlay').addEventListener('click', e => { if (e.target===document.getElementById('about-overlay')) closeAbout(); });
@@ -1054,11 +1793,16 @@ document.addEventListener('DOMContentLoaded', () => {
   uz.addEventListener('dragleave', () => uz.classList.remove('drag-over'));
   uz.addEventListener('drop', e => { e.preventDefault(); uz.classList.remove('drag-over'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
   // Buttons
+  document.getElementById('t-body').addEventListener('click', e => {
+    const b = e.target.closest('.btn-copy');
+    if (b) copyKey(b);
+  });
   document.getElementById('btn-analyze').addEventListener('click', runAnalysis);
   document.getElementById('btn-clear-all').addEventListener('click', clearAll);
   document.getElementById('btn-word').addEventListener('click', exportWord);
   document.getElementById('btn-excel').addEventListener('click', exportExcel);
 
+  document.getElementById('app-version').textContent = APP_VERSION;
   applyLang('es');
 });
 </script>
