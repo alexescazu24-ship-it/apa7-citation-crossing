@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+title: "BiblioCrossing: verificador de coherencia entre citas y referencias APA 7"
+message: "Si usás esta herramienta en un trabajo publicado, por favor citala así."
+type: software
+authors:
+  - family-names: "Chinchilla Serrano"
+    given-names: "Freddy Alexander"
+    email: fchinchillas@uned.ac.cr
+    orcid: "https://orcid.org/0000-0001-9465-1522"
+    affiliation: "Unidad de Ciencia Abierta, Vicerrectoría de Investigación, Universidad Estatal a Distancia (UNED), Costa Rica"
+    country: CR
+  - family-names: "Seas"
+    given-names: "Carolina"
+    orcid: "https://orcid.org/0000-0002-2102-1973"
+    affiliation: "Unidad de Ciencia Abierta, Vicerrectoría de Investigación, Universidad Estatal a Distancia (UNED), Costa Rica"
+    country: CR
+  - family-names: "Segura Jiménez"
+    given-names: "Steven"
+    orcid: "https://orcid.org/0009-0005-6475-8798"
+    affiliation: "Unidad de Ciencia Abierta, Vicerrectoría de Investigación, Universidad Estatal a Distancia (UNED), Costa Rica"
+    country: CR
+abstract: >-
+  Open-source web tool that cross-checks the in-text citations of a manuscript against its
+  reference list, following APA 7th edition. It reports citations with no reference, uncited
+  references, possible matches with a different year, duplicates, ambiguous surnames, personal
+  communications and legal sources. It does not query external databases: it checks the internal
+  coherence of the document. Input is pasted text or a .docx file, and the report can be exported
+  to Word or Excel. It runs entirely in the browser, with no accounts, and never uploads the
+  manuscript. Interface and manual in Spanish and English.
+
+
+  Herramienta web de código abierto que cruza las citas del texto de un manuscrito con su lista
+  de referencias, siguiendo la norma APA 7.ª edición. Reporta citas sin referencia, referencias
+  no citadas, posibles coincidencias con año distinto, duplicados, apellidos ambiguos,
+  comunicaciones personales y normas jurídicas. No consulta bases de datos externas: revisa la
+  coherencia interna del documento. Acepta texto pegado o un archivo .docx, y el reporte se
+  exporta a Word o Excel. Funciona íntegramente en el navegador, sin cuentas y sin subir el
+  manuscrito. Interfaz y manual en español e inglés.
+keywords:
+  - citation checking
+  - APA 7
+  - reference list
+  - editorial workflow
+  - scholarly publishing
+  - cruce de citas
+  - referencias bibliográficas
+  - edición científica
+version: "1.3.0"
+date-released: "2026-11-12"
+license: AGPL-3.0-or-later
+repository-code: "https://github.com/alexescazu24-ship-it/apa7-citation-crossing"
+url: "https://alexescazu24-ship-it.github.io/apa7-citation-crossing/"

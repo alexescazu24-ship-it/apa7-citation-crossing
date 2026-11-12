@@ -42,14 +42,35 @@ are not supported: convert to `.docx` or paste the text.
 
 A built-in manual (📖 Manual in the header) documents every case in Spanish and English.
 
+## Cite it
+
+If you use this tool in published work, cite it with the metadata in
+[`CITATION.cff`](CITATION.cff).
+
 ## Licence
 
 - **Code:** [AGPL-3.0-or-later](https://www.gnu.org/licenses/agpl-3.0.html) — see [LICENSE](LICENSE)
 - **Content and documentation:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- The **BiblioCrossing logo and name** are reserved and covered by neither licence.
+- The **Universidad Estatal a Distancia and Open Science Unit logos** are institutional
+  trademarks, used here because the tool is the institution's own work, and they are
+  **not covered by the licences above** either: reusing the code or the content gives no
+  right to reuse those marks.
 
-Copyright (C) 2026 Alexander Chinchilla Serrano
+Copyright (C) 2026 Freddy Alexander Chinchilla Serrano, Carolina Seas, Steven Segura Jiménez
 
 ## Credits
 
-Developed at the Vice-Rectory for Research, Universidad Estatal a Distancia (UNED), San José,
-Costa Rica. Contact: fchinchillas@uned.ac.cr
+Developed at the **Open Science Unit**, Vice-Rectory for Research, Universidad Estatal a
+Distancia (UNED) · San José, Costa Rica · 2026
+
+| Author | ORCID | Contribution |
+|---|---|---|
+| Freddy Alexander Chinchilla Serrano | [0000-0001-9465-1522](https://orcid.org/0000-0001-9465-1522) | Original idea, development |
+| Carolina Seas | [0000-0002-2102-1973](https://orcid.org/0000-0002-2102-1973) | Development, improvements, testing |
+| Steven Segura Jiménez | [0009-0005-6475-8798](https://orcid.org/0009-0005-6475-8798) | Development, improvements, testing |
+
+Contact: fchinchillas@uned.ac.cr
+
+**Coding:** Claude Code (Anthropic) — model identifier `claude-opus-5` — under human
+editorial instruction, judgement and experience.
