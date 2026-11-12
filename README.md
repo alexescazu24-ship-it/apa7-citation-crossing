@@ -8,6 +8,8 @@ and journal articles.
 
 **Use it:** https://alexescazu24-ship-it.github.io/apa7-citation-crossing/
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24148524.svg)](https://doi.org/10.5281/zenodo.24148524)
+
 Everything runs in the browser. The manuscript is never uploaded to any server, and no account or
 installation is required.
 
@@ -45,7 +47,13 @@ A built-in manual (📖 Manual in the header) documents every case in Spanish an
 ## Cite it
 
 If you use this tool in published work, cite it with the metadata in
-[`CITATION.cff`](CITATION.cff).
+[`CITATION.cff`](CITATION.cff). The DOI above covers **all versions** and always resolves to
+the most recent one; use it unless you need to point at a specific release.
+
+| | DOI |
+|---|---|
+| All versions | [10.5281/zenodo.24148524](https://doi.org/10.5281/zenodo.24148524) |
+| Version 1.3.0 | [10.5281/zenodo.24148525](https://doi.org/10.5281/zenodo.24148525) |
 
 ## Licence
 
